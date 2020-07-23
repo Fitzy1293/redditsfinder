@@ -28,7 +28,8 @@ def getPosts(user):
         ct = 0
         posts = []
         while True:
-            url = f'{apiUrl}{postType}/?author={user}&size=1000&before={before}'
+            time.sleep(.5)
+            url = f'{apiUrl}{postType}/?author={user}&size=100&before={before}'
             try:
                 response = urllib.request.urlopen(url)
                 data = json.loads(response.read())['data']
@@ -57,10 +58,15 @@ def getPosts(user):
                     allPosts[postType + 's'] = posts
                     break
             except HTTPError:
-                pass
+                print('Rate limited')
+
+
+
 
 
         before = beginTime
+
+
 
     return allPosts
 
