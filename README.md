@@ -17,4 +17,5 @@ Copy and paste the code from push.py wherever you want.
 # How to use
 Make sure you are in the path where redditsfinder was installed. \
 `python3 push.py [redditUsername]` \
-The location of the output files are listed when the script is finished.
+The location of the output files are listed when the script is finished.\
+![Alt text](runScript.png?raw=true "Optional Title")
