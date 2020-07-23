@@ -18,6 +18,8 @@ Make sure you are in the path where redditsfinder was installed. \
 ![Alt text](runScript.png?raw=true "Optional Title")
 
 # Files created by the script.
-**Generic post object and an example subreddit rankings for the user.**
-![Alt text](genericObject.png?raw=true "Optional Title") ![Alt text](rank.png?raw=true "Optional Title")
+**Example post object.**
+![Alt text](genericObject.png?raw=true "Optional Title") \
+**Example subreddit rankings**\
+![Alt text](rank.png?raw=true "Optional Title")
 
