@@ -13,9 +13,9 @@ Copy and paste the code from push.py wherever you want.
 
 
 # How to use
-Usage > `python3 push.py [redditUsername]` 
+Usage > `python3 push.py [redditUsername]` \
 Make sure you have python3 installed.\
-Make sure you are in the path where redditsfinder was installed. 
+Make sure you are in the path where redditsfinder was installed. \
 **Example terminal output**\
 ![Alt text](runScript.png?raw=true "Optional Title")
 
