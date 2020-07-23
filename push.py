@@ -29,7 +29,7 @@ def getPosts(user):
         ct = 0
         posts = []
         while True:
-            time.sleep(.5) #Avoids rate limits.
+            time.sleep(.75) #Avoids rate limits.
             url = f'{apiUrl}{postType}/?author={user}&size={postSetMaxLen}&before={before}'
             try:
                 response = urllib.request.urlopen(url)
