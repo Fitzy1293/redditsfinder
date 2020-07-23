@@ -1,7 +1,8 @@
-# redditsfinder
-Python tool to get all of a users posts. Uses the pushshift API with different timestamps to get sets of posts. \
+# redditsfinder - A simple tool to analyze reddit users. 
+Python tool to get all of a users submissions and comments. Uses the pushshift API with different timestamps to get sets of posts. \
 PRAW is the wrapper for using python with reddits API, but reddits API is limited to 1000 posts with no real good way of getting around it.\
-Handy way to analyze a user. 
+The only argument is a reddit username. \
+
 
 # To install 
 I would like to add a shell script to ~/bin so you don't have to type out the python commands.\
