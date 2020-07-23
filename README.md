@@ -2,6 +2,7 @@
 Python tool to get all of a users submissions and comments. Uses the pushshift API with different timestamps to get sets of posts. \
 PRAW is the wrapper for using python with reddits API, but reddits API is limited to 1000 posts with no real good way of getting around it.\
 The only argument is a reddit username. \
+Output is important fields from pushshift and check for which subreddits the person posts the most in.
 
 
 # To install 
