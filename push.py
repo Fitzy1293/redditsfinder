@@ -11,7 +11,7 @@ from json2html import *
 def getPosts(user):
 
     apiUrl = 'https://api.pushshift.io/reddit/search/'
-    postSetMaxLen = 100 #How many posts in each pushshift request.
+    postSetMaxLen = 100 #Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
 
     #Pushshift attributes I thought were useful.
     keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink'),
@@ -84,18 +84,18 @@ def countPosts(allPosts): #Count and order most posted subs.
             if subreddit is not None:
                 counts[subreddit] = subreddits.count(subreddit)
 
-        sortedCounts = sorted(counts.items(), key=lambda kv:(kv[1], kv[0]), reverse=True)
+        sortedCounts = sorted(counts.items(), key=lambda kv:(kv[1], kv[0]), reverse=True) 
 
         postCounts[postType] = sortedCounts
 
     return postCounts
 
 def writeFiles(allPosts, postCounts, user):
-    usersDir = os.path.join(os.getcwd(), 'users') #New folder containing a folder for each user.
+    usersDir = os.path.join(os.getcwd(), 'users') #New folder containing a folder for each username.
     if not os.path.exists(usersDir):
         os.mkdir(usersDir)
 
-    userDir = os.path.join(usersDir, user) #New folder containing a folder for each user.
+    userDir = os.path.join(usersDir, user) #Contains username files.
     if not os.path.exists(userDir):
         os.mkdir(userDir)
 
@@ -130,8 +130,7 @@ if __name__ == '__main__':
 
     user = sys.argv[1]
     outputDir = os.path.join(os.getcwd(), 'users', user)
-    print(f'Gathering and formatting data from reddit user {user}')
-
+    print(f'**Gathering and formatting data from reddit user {user}**')
 
 
     allPosts = getPosts(user)
