@@ -6,7 +6,7 @@ The only argument is a reddit username.
 **Linux single command basic build**\
 `cd ~ && mkdir -p redditsfinder && cd redditsfinder && wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/push.py`\
 I would like to add a shell script to ~/bin so you don't have to type out the python commands.\
-Not really important for it to work though.\
+Not really important for it to work though.
 
 **Windows & Mac**\
 Copy and paste the code from push.py wherever you want. 
