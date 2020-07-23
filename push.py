@@ -11,6 +11,7 @@ from json2html import *
 def getPosts(user):
 
     apiUrl = 'https://api.pushshift.io/reddit/search/'
+    postSetMaxLen = 100 #How many posts in each pushshift request.
 
     #Pushshift attributes I thought were useful.
     keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink'),
@@ -28,8 +29,8 @@ def getPosts(user):
         ct = 0
         posts = []
         while True:
-            time.sleep(.5)
-            url = f'{apiUrl}{postType}/?author={user}&size=100&before={before}'
+            time.sleep(.5) #Avoids rate limits.
+            url = f'{apiUrl}{postType}/?author={user}&size={postSetMaxLen}&before={before}'
             try:
                 response = urllib.request.urlopen(url)
                 data = json.loads(response.read())['data']
@@ -54,11 +55,13 @@ def getPosts(user):
                 print('\t' + log + ' ' + url)
                 ct = ct+1
 
-                if len(data)<100: #Get 100 posts at a time.
+                if len(data) < postSetMaxLen: #Get 100 posts at a time they switched from 1000?
                     allPosts[postType + 's'] = posts
                     break
+
             except HTTPError:
                 print('Rate limited')
+
 
 
 
