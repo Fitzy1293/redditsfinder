@@ -7,21 +7,18 @@ import sys
 from urllib.error import HTTPError
 
 
-def getPosts(user): #From pushshift API.
+def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but works.
 
     apiUrl = 'https://api.pushshift.io/reddit/search/'
     postSetMaxLen = 100 #Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
 
-    #Pushshift attributes I thought were useful.
-    keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink'),
-               'submission': ('id', 'created_utc', 'subreddit', 'selftext', 'score', 'full_link', 'url')}
+
 
     before = int(round(time.time())) #Subtract off last timestamp in set, put in pushshift url.
     beginTime = before #To reset time to original value after comments.
     allPosts = {}
     for postType in ('comment', 'submission'):
         print()
-
 
         print('Pushshift ' + postType[0] + postType[1:] + ' request log')
 
@@ -46,7 +43,7 @@ def getPosts(user): #From pushshift API.
 
                     posts.append(postDict)
 
-                if len(posts)!=0:
+                if len(posts) != 0:
                     before = posts[-1]['created_utc']
 
                 log = f'{ct+1} - {len(data)} '
@@ -119,26 +116,27 @@ if __name__ == '__main__':
     start = time.time()
 
     user = sys.argv[1]
+
+    #Pushshift attributes I thought were useful.
+    keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink'),
+               'submission': ('id', 'created_utc', 'subreddit', 'selftext', 'score', 'full_link', 'url')}
+
     outputDir = os.path.join(os.getcwd(), 'users', user)
+
     print(f'**Gathering and formatting data from reddit user {user}**')
 
-
-    allPosts = getPosts(user)
+    allPosts = getPosts(user, keyType)
     print()
     print('Totals')
 
     print('\t' + f'Comments = {len(allPosts["comments"])}')
-
-
     print('\t' + f'Submissions = {len(allPosts["submissions"])}')
 
     counts = countPosts(allPosts)
 
     writeFiles(allPosts, counts, user)
 
-    totalTime = round(time.time() - start, 1)
-
     print('\tFiles created in  = ' + outputDir )
     print('\tTrimmed and concatenated pushshift JSON = ' + user +'.json')
     print('\tMost posted in subreddits = ' + user +'.txt') #Could probably use a better filename.
-    print('\tRun time = ' + f'{totalTime} s')
+    print('\tRun time = ' + f'{round(time.time() - start, 1)} s')
