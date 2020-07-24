@@ -5,6 +5,8 @@ import os
 from pprint import pprint
 import sys
 from urllib.error import HTTPError
+from datetime import datetime
+
 
 
 def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but works.
@@ -37,7 +39,13 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
                     postDict = dict.fromkeys(ourKeys, None)
                     for key in ourKeys:
                         if key in ourKeys and key in apiKeys:
+
+                            if key == 'created_utc':
+                                timestamp = int(i[key])
+                                postDict['datetime'] = str(datetime.utcfromtimestamp(timestamp).strftime('%a %b %d %Y, %I:%M %p UTC'))
+
                             postDict[key] = i[key]
+
                     postDict['postType'] = postType
 
                     posts.append(postDict)
@@ -114,7 +122,7 @@ def writeFiles(allPosts, postCounts, user):
 if __name__ == '__main__':
     start = time.time()
 
-    user = sys.argv[1]
+    user = sys.argv[-1]
 
     #Pushshift attributes I thought were useful.
     keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink', 'link_id', 'parent_id'),
