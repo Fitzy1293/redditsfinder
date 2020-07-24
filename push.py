@@ -6,8 +6,10 @@ from pprint import pprint
 import sys
 from urllib.error import HTTPError
 from datetime import datetime
+import redditcleaner
 
-#To do - use https://github.com/LoLei/redditcleaner to clean up text.
+#To do - use /redditcleaner to clean up text.
+    #Include in install instructions
 
 
 def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but works.
@@ -41,11 +43,16 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
                     for key in ourKeys:
                         if key in ourKeys and key in apiKeys:
 
+                            outputValue = i[key]
+
+                            if key == 'body' or key == 'selftext': #Thanks https://github.com/LoLei for this
+                                outputValue = redditcleaner.clean(outputValue) #Makes reddit's text formatting readable
+
                             if key == 'created_utc':
                                 timestamp = int(i[key])
                                 postDict['datetime'] = str(datetime.utcfromtimestamp(timestamp).strftime('%a %b %d %Y, %I:%M %p UTC'))
 
-                            postDict[key] = i[key]
+                            postDict[key] = outputValue
 
                     postDict['postType'] = postType
 
