@@ -7,9 +7,8 @@ import sys
 from urllib.error import HTTPError
 from datetime import datetime
 import redditcleaner
-import hjson
 
-def humanReadablePost(redditRawText):
+def humanReadablePost(redditRawText): #Makes body and selftext not an abomination.
     cleaned = redditcleaner.clean(redditRawText).split() #Makes reddit's text formatting readable
 
     splitWords = []
@@ -127,7 +126,6 @@ def writeFiles(allPosts, postCounts, user):
         os.mkdir(userDir)
 
     if len(allPosts)!=0:
-        #prettyJson = hjson.dumps(allPosts)
         jPath = os.path.join(userDir, f'{user}.json')
         with open(jPath, 'w+', newline='\n') as f:
             json.dump(allPosts, f, indent=4)
