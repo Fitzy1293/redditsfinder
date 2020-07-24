@@ -13,7 +13,6 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
     postSetMaxLen = 100 #Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
 
 
-
     before = int(round(time.time())) #Subtract off last timestamp in set, put in pushshift url.
     beginTime = before #To reset time to original value after comments.
     allPosts = {}
@@ -118,7 +117,7 @@ if __name__ == '__main__':
     user = sys.argv[1]
 
     #Pushshift attributes I thought were useful.
-    keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink'),
+    keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink', 'link_id', 'parent_id'),
                'submission': ('id', 'created_utc', 'subreddit', 'selftext', 'score', 'full_link', 'url')}
 
     outputDir = os.path.join(os.getcwd(), 'users', user)
