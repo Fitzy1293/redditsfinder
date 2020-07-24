@@ -7,9 +7,29 @@ import sys
 from urllib.error import HTTPError
 from datetime import datetime
 import redditcleaner
+import hjson
 
-#To do - use /redditcleaner to clean up text.
-    #Include in install instructions
+def humanReadablePost(redditRawText):
+    cleaned = redditcleaner.clean(redditRawText).split() #Makes reddit's text formatting readable
+
+    splitWords = []
+    temp = []
+    for i, word in enumerate(cleaned):
+
+        temp.append(word)
+        if i % 15 == 0 and i != 0:
+            splitWords.append(temp)
+            temp = []
+
+    if len(temp) != 0:
+        splitWords.append(temp)
+    outputValue = []
+    for cleanPost in splitWords:
+        wordList = ' '.join(cleanPost)
+        outputValue.append(wordList)
+    #outputValue = [wordSet + '\n' for wordSet in outputValue]
+
+    return outputValue
 
 
 def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but works.
@@ -18,7 +38,7 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
     postSetMaxLen = 100 #Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
 
 
-    before = int(round(time.time())) #Subtract off last timestamp in set, put in pushshift url.
+    before = int(round(time.time())) #Subtract off last amp in set, put in pushshift url.
     beginTime = before #To reset time to original value after comments.
     allPosts = {}
     for postType in ('comment', 'submission'):
@@ -35,21 +55,25 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
                 response = urllib.request.urlopen(url)
                 data = json.loads(response.read())['data']
 
-                for i in data:
+                for post in data:
                     ourKeys = keyType[postType]
-                    apiKeys = i.keys()
+                    apiKeys = post.keys()
 
                     postDict = dict.fromkeys(ourKeys, None)
+
                     for key in ourKeys:
                         if key in ourKeys and key in apiKeys:
 
-                            outputValue = i[key]
+                            outputValue = post[key]
 
                             if key == 'body' or key == 'selftext': #Thanks https://github.com/LoLei for this
-                                outputValue = redditcleaner.clean(outputValue) #Makes reddit's text formatting readable
+                                outputValue = humanReadablePost(outputValue)
+                                print(outputValue)
+
+
 
                             if key == 'created_utc':
-                                timestamp = int(i[key])
+                                timestamp = int(post[key])
                                 postDict['datetime'] = str(datetime.utcfromtimestamp(timestamp).strftime('%a %b %d %Y, %I:%M %p UTC'))
 
                             postDict[key] = outputValue
@@ -103,11 +127,11 @@ def writeFiles(allPosts, postCounts, user):
         os.mkdir(userDir)
 
     if len(allPosts)!=0:
-
+        #prettyJson = hjson.dumps(allPosts)
         jPath = os.path.join(userDir, f'{user}.json')
         with open(jPath, 'w+', newline='\n') as f:
             json.dump(allPosts, f, indent=4)
-
+            #f.write(prettyJson)
         tPath = os.path.join(userDir, f'{user}.txt')
         with open(tPath, 'w+') as g:
             for k,v in postCounts.items():
