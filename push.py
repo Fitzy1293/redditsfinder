@@ -7,6 +7,7 @@ import sys
 from urllib.error import HTTPError
 from datetime import datetime
 
+#To do - use https://github.com/LoLei/redditcleaner to clean up text.
 
 
 def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but works.
@@ -96,13 +97,11 @@ def writeFiles(allPosts, postCounts, user):
 
     if len(allPosts)!=0:
 
-        jFname = f'{user}.json'
-        jPath = os.path.join(userDir, jFname)
+        jPath = os.path.join(userDir, f'{user}.json')
         with open(jPath, 'w+', newline='\n') as f:
             json.dump(allPosts, f, indent=4)
 
-        tFname = f'{user}.txt'
-        tPath = os.path.join(userDir, tFname)
+        tPath = os.path.join(userDir, f'{user}.txt')
         with open(tPath, 'w+') as g:
             for k,v in postCounts.items():
                 postType = f'***{k[0].upper()}{k[1:]}***'
@@ -111,12 +110,6 @@ def writeFiles(allPosts, postCounts, user):
                     g.write(i[0] + ': ' + str(i[1]) + '\n')
 
                 g.write('\n')
-
-        for fname in os.listdir(userDir):
-            oldFname = os.path.join(userDir, fname)
-            if oldFname not in (jPath, tPath):
-                os.remove(oldFname)
-
 
 
 if __name__ == '__main__':
