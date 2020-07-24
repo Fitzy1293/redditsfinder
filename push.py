@@ -5,10 +5,9 @@ import os
 from pprint import pprint
 import sys
 from urllib.error import HTTPError
-from json2html import *
 
 
-def getPosts(user):
+def getPosts(user): #From pushshift API.
 
     apiUrl = 'https://api.pushshift.io/reddit/search/'
     postSetMaxLen = 100 #Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
@@ -39,7 +38,6 @@ def getPosts(user):
                     ourKeys = keyType[postType]
                     apiKeys = i.keys()
 
-
                     postDict = dict.fromkeys(ourKeys, None)
                     for key in ourKeys:
                         if key in ourKeys and key in apiKeys:
@@ -62,14 +60,7 @@ def getPosts(user):
             except HTTPError:
                 print('Rate limited')
 
-
-
-
-
-
         before = beginTime
-
-
 
     return allPosts
 
@@ -84,7 +75,7 @@ def countPosts(allPosts): #Count and order most posted subs.
             if subreddit is not None:
                 counts[subreddit] = subreddits.count(subreddit)
 
-        sortedCounts = sorted(counts.items(), key=lambda kv:(kv[1], kv[0]), reverse=True) 
+        sortedCounts = sorted(counts.items(), key=lambda kv:(kv[1], kv[0]), reverse=True)
 
         postCounts[postType] = sortedCounts
 
@@ -100,16 +91,15 @@ def writeFiles(allPosts, postCounts, user):
         os.mkdir(userDir)
 
     if len(allPosts)!=0:
-        newUtc = int(round(time.time()))
 
         jFname = f'{user}.json'
         jPath = os.path.join(userDir, jFname)
         with open(jPath, 'w+', newline='\n') as f:
             json.dump(allPosts, f, indent=4)
 
-        cFname = f'{user}.txt'
-        cPath = os.path.join(userDir, cFname)
-        with open(cPath, 'w+') as g:
+        tFname = f'{user}.txt'
+        tPath = os.path.join(userDir, tFname)
+        with open(tPath, 'w+') as g:
             for k,v in postCounts.items():
                 postType = f'***{k[0].upper()}{k[1:]}***'
                 g.write(postType + '\n')
@@ -120,7 +110,7 @@ def writeFiles(allPosts, postCounts, user):
 
         for fname in os.listdir(userDir):
             oldFname = os.path.join(userDir, fname)
-            if oldFname not in (jPath, cPath):
+            if oldFname not in (jPath, tPath):
                 os.remove(oldFname)
 
 
@@ -134,6 +124,7 @@ if __name__ == '__main__':
 
 
     allPosts = getPosts(user)
+    print()
     print('Totals')
 
     print('\t' + f'Comments = {len(allPosts["comments"])}')
