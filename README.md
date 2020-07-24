@@ -1,5 +1,6 @@
-# redditsfinder - A simple tool to analyze reddit users. 
-Python tool to get all of a users submissions and comments. Uses the pushshift API with different timestamps to get sets of posts. \
+# redditsfinder - A simple tool to analyze reddit users
+Python tool to get all submissions and comments of a reddit user. \
+Uses the pushshift API with different timestamps to get sets of posts. \
 The only argument is a reddit username. 
 
 # Installation 
