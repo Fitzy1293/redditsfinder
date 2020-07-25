@@ -2,7 +2,8 @@
 ![Alt text](images/readable.png "Optional Title") \
 Python tool to get all submissions and comments of a reddit user. \
 Uses the pushshift API with different timestamps to get sets of posts. \
-The only argument is a reddit username. 
+The only argument is a reddit username. \
+*The goal of this program is ease of use and correctness in grabbing every post.**
 
 # Installation 
 **Make sure you have python3 installed**.\
