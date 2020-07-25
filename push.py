@@ -131,7 +131,7 @@ def writeFiles(allPosts, postCounts, user):
         tPath = os.path.join(userDir, f'{user}.txt')
         with open(tPath, 'w+') as g:
             for k,v in postCounts.items():
-                postType = f'***{k[0].upper()}{k[1:]}***'
+                postType = f'{k[0].upper()}{k[1:]}'
                 g.write(postType + '\n')
                 for i in v:
                     g.write(i[0] + ': ' + str(i[1]) + '\n')
@@ -155,15 +155,19 @@ def run(user):
 
     print('\t' + f'Comments = {len(allPosts["comments"])}')
     print('\t' + f'Submissions = {len(allPosts["submissions"])}')
+    print()
 
     counts = countPosts(allPosts)
 
     writeFiles(allPosts, counts, user)
 
-    print('\tFiles created in  = ' + outputDir )
-    print('\tTrimmed and concatenated pushshift JSON = ' + user +'.json')
-    print('\tMost posted in subreddits = ' + user +'.txt') #Could probably use a better filename.
-    print('\tRun time = ' + f'{round(time.time() - start, 1)} s')
+    print('File locations')
+    print('\t' + outputDir )
+    print('\t' + f'{user}.json')
+    print('\t' + f'{user}.txt') #Could probably use a better filename.
+    print()
+
+    print('Run time - ' + f'{round(time.time() - start, 1)} s')
 
 
 if __name__ == '__main__':
