@@ -1,7 +1,6 @@
 # redditsfinder - A simple tool to analyze reddit users
 ![Alt text](images/readable.png "Optional Title") 
-## The only argument is a reddit username. 
-## **The goal of this program is ease of use and correctly grabbing every post.** 
+# The only argument is a reddit username. <br/> The goal of this program is ease of use and correctly grabbing every post.
 
 # Installation 
 **Make sure you have python3 installed**.\
