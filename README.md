@@ -25,8 +25,3 @@ Make sure you're in the redditsfinder directory for the python interpreter way.
 **Example terminal output**\
 ![Alt text](images/runScript.png?raw=true "Optional Title")
 
-# User's subreddit rankings
-
-**Example subreddit rankings**\
-![Alt text](images/rank.png?raw=true "Optional Title")
-
