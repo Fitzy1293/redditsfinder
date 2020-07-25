@@ -6,7 +6,7 @@ The only argument is a reddit username.
 
 # Installation 
 **Linux** \
-Get python source.
+Get python source.\
 `cd ~ && pip3 install redditcleaner && mkdir -p redditsfinder && cd redditsfinder && wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/push.py`\
 Add to your bin to use as a command line tool. \
 `mkdir -p ~/bin && cp push.py ~/bin/redditsfinder && cd ~/bin && chmod +x redditsfinder`
