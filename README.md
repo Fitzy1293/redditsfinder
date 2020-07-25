@@ -7,7 +7,7 @@ The only argument is a reddit username.
 # Installation 
 **Make sure you have python3 installed**.\
 ***Linux one line install*** \
-`wget - O - https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/install | bash`
+`wget - O - https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/install.sh | bash`
 
 
 ***Windows & Mac***\
