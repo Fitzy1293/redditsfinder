@@ -1,5 +1,5 @@
 # redditsfinder - A simple tool to analyze reddit users
-![Alt text](readable.png "Optional Title") \
+![Alt text](images/readable.png "Optional Title") \
 Python tool to get all submissions and comments of a reddit user. \
 Uses the pushshift API with different timestamps to get sets of posts. \
 The only argument is a reddit username. 
@@ -22,7 +22,7 @@ Usage > `python3 push.py [redditUsername]` \
 Make sure you have python3 installed.\
 Make sure you are in the path where redditsfinder was installed. \
 **Example terminal output**\
-![Alt text](runScript.png?raw=true "Optional Title")
+![Alt text](images/runScript.png?raw=true "Optional Title")
 
 # User's subreddit rankings
 
