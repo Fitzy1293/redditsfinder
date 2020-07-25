@@ -9,6 +9,8 @@ from urllib.error import HTTPError
 from datetime import datetime
 import redditcleaner
 
+#f strings are amazing.
+
 def humanReadablePost(redditRawText): #Makes body and selftext not an abomination.
     cleaned = redditcleaner.clean(redditRawText).split() #Makes reddit's text formatting readable
 
@@ -21,21 +23,16 @@ def humanReadablePost(redditRawText): #Makes body and selftext not an abominatio
             splitWords.append(temp)
             temp = []
 
-    #
     #Another way of saying if the number of totalW words % 15 != 0. Need to put the leftover words where they belong
     if len(temp) != 0:
         splitWords.append(temp)
 
-    outputValue = [' '.join(cleanPost) for cleanPost in splitWords] #1D list with each item containing a max of five words.
-
-    return outputValue
-
+    return [' '.join(cleanPost) for cleanPost in splitWords] #1D list with each item containing a max of five words.
 
 def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but works.
 
     apiUrl = 'https://api.pushshift.io/reddit/search/'
     postSetMaxLen = 100 #Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
-
 
     before = int(round(time.time())) #Subtract off last amp in set, put in pushshift url.
     beginTime = before #To reset time to original value after comments.
@@ -58,7 +55,7 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
                 data = json.loads(response.read())['data']
 
                 for post in data:
-                    ourKeys = keyType[postType] #Getting relevant keys for either a comment or submission.
+                    ourKeys = keyType[postType] #Relevant keys for either a comment or submission.
                     apiKeys = post.keys() #All pushshift keys for this post, we do not want them all - we need readable output.
 
                     postDict = dict.fromkeys(ourKeys, None) #Kinda forgot why this is written like this.
@@ -119,26 +116,24 @@ def countPosts(allPosts): #Count and order most posted subs.
     return postCounts
 
 def writeFiles(allPosts, postCounts, user):
-    usersDir = os.path.join(os.getcwd(), 'users') #New folder containing a folder for each username.
-    if not os.path.exists(usersDir):
-        os.mkdir(usersDir)
 
-    userDir = os.path.join(usersDir, user) #Contains username files.
-    if not os.path.exists(userDir):
-        os.mkdir(userDir)
+    usersDir = os.path.join(os.getcwd(), 'users') #New folder containing a folder for each username.
+    userDir = os.path.join(usersDir, user) #Contains files for username.
+    for dir in (usersDir, userDir):
+        if not os.path.exists(dir):
+            os.mkdir(dir)
 
     if len(allPosts)!=0:
-        jPath = os.path.join(userDir, f'{user}.json')
+        jPath = os.path.join(userDir, 'all_posts.json')
         with open(jPath, 'w+', newline='\n') as f:
             json.dump(allPosts, f, indent=4)
 
-        tPath = os.path.join(userDir, f'{user}.txt')
+        tPath = os.path.join(userDir, 'subreddit_count.txt')
         with open(tPath, 'w+') as g:
             for k,v in postCounts.items():
-                postType = f'{k[0].upper()}{k[1:]}'
-                g.write(postType + '\n')
+                g.write(f'{k[0].upper()}{k[1:]}' + '\n')
                 for i in v:
-                    g.write(i[0] + ': ' + str(i[1]) + '\n')
+                    g.write(f'{i[0]} {str(i[1])}' + '\n')
 
                 g.write('\n')
 
@@ -165,14 +160,12 @@ def run(user):
 
     writeFiles(allPosts, counts, user)
 
-    print('File locations')
-    print('\t' + outputDir )
-    print('\t' + f'{user}.json')
-    print('\t' + f'{user}.txt') #Could probably use a better filename.
+    print(outputDir )
+    print('\tall_posts.json')
+    print('\tsubreddit_count.txt') #Could probably use a better filename.
     print()
 
     print('Run time - ' + f'{round(time.time() - start, 1)} s')
-
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
