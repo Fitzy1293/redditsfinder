@@ -10,7 +10,7 @@ Copy and paste the code from push.py wherever you want. \
 To do the one line install on Windows you could use a linux virtual machine, or get Ubuntu from the Windows store which is apparently possible. 
 
 # How to use
-If you did the full linux install. `redditsfinder[redditUsername]` \
+If you did the full linux install. `redditsfinder [redditUsername]` \
 If you only ran the first linux install command or are on Windows or Mac. `python3 push.py [redditUsername]` \
 Make sure you're in the redditsfinder directory for the python interpreter way.\
 **Make sure you have python3 installed**.
