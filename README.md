@@ -23,7 +23,7 @@ Copy and paste the code from push.py wherever you want.
 # How to use
 If you did the full linux install. `redditsfinder[redditUsername]` \
 If you only ran the first linux command or are on Windows or Mac. `python3 push.py [redditUsername]` \
-Make sure you're in the reddtsfinder directory for the python interpreter way.
+Make sure you're in the redditsfinder directory for the python interpreter way.
 
 **Example terminal output**\
 ![Alt text](images/runScript.png?raw=true "Optional Title")
