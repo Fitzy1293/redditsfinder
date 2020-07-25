@@ -67,7 +67,7 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
 
                             if key == 'body' or key == 'selftext': #Thanks https://github.com/LoLei for this
                                 outputValue = humanReadablePost(outputValue)
-                                print(outputValue)
+                              
 
 
 
