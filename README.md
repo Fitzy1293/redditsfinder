@@ -27,5 +27,5 @@ Make sure you are in the path where redditsfinder was installed. \
 # User's subreddit rankings
 
 **Example subreddit rankings**\
-![Alt text](rank.png?raw=true "Optional Title")
+![Alt text](images/rank.png?raw=true "Optional Title")
 
