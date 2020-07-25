@@ -138,11 +138,10 @@ def writeFiles(allPosts, postCounts, user):
 
                 g.write('\n')
 
-
-if __name__ == '__main__':
+def run(user):
     start = time.time()
 
-    user = sys.argv[-1]
+
 
     #Pushshift attributes I thought were useful.
     keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink', 'link_id', 'parent_id'),
@@ -167,3 +166,10 @@ if __name__ == '__main__':
     print('\tTrimmed and concatenated pushshift JSON = ' + user +'.json')
     print('\tMost posted in subreddits = ' + user +'.txt') #Could probably use a better filename.
     print('\tRun time = ' + f'{round(time.time() - start, 1)} s')
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 1:
+        run(sys.argv[-1])
+    else:
+        print('Remember to add a username')
