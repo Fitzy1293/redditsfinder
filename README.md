@@ -1,19 +1,13 @@
 # redditsfinder - A simple tool to analyze reddit users
 ![Alt text](images/readable.png "Optional Title") 
-# The only argument is a reddit username. <br/> The goal of this program is ease of use and correctly grabbing every post.
-
-# Installation 
-
+## The goal of this program is ease of use and correctly grabbing every post. <br/> 
 ***Linux one line install*** \
 `wget -O - https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/install.sh | bash`
 
 
 ***Windows & Mac***\
-Copy and paste the code from push.py wherever you want. 
-
-
-
-
+Copy and paste the code from push.py wherever you want. \
+To be able to use this without calling the python interpreter on Windows you could use a linux virtual machine, or even use get Ubuntu from the Windows store which is apparently possible. 
 
 # How to use
 If you did the full linux install. `redditsfinder[redditUsername]` \
