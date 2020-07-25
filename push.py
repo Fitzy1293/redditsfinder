@@ -141,8 +141,6 @@ def writeFiles(allPosts, postCounts, user):
 def run(user):
     start = time.time()
 
-
-
     #Pushshift attributes I thought were useful.
     keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink', 'link_id', 'parent_id'),
                'submission': ('id', 'created_utc', 'subreddit', 'selftext', 'score', 'full_link', 'url')}
@@ -169,7 +167,17 @@ def run(user):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 1:
-        run(sys.argv[-1])
-    else:
+    if len(sys.argv) == 1:
+        print('Remember to add a username')
+        print('For help enter redditsfinder -h')
+    elif len(sys.argv) == 2:
+        if sys.argv[-1] == '-h':
+            print('Only argument is a username')
+            print('Adding more options soon')
+        else:
+            run(sys.argv[1])
+
+    elif len(sys.argv) >= 3:
+
+
         print('Remember to add a username')
