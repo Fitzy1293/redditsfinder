@@ -7,7 +7,7 @@
 
 ***Windows & Mac***\
 Copy and paste the code from push.py wherever you want. \
-To be able to use this without calling the python interpreter on Windows you could use a linux virtual machine, or even use get Ubuntu from the Windows store which is apparently possible. 
+To do the one line install on Windows you could use a linux virtual machine, or get Ubuntu from the Windows store which is apparently possible. 
 
 # How to use
 If you did the full linux install. `redditsfinder[redditUsername]` \
