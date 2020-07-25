@@ -21,7 +21,7 @@ If you only ran the first linux install command or are on Windows or Mac. `pytho
 Make sure you're in the redditsfinder directory for the python interpreter way.\
 **Make sure you have python3 installed**.
 
-**Example terminal output**\
+# Example terminal output
 ![Alt text](images/log.png?raw=true "Optional Title")\
 ![Alt text](images/out.png?raw=true "Optional Title")
 
