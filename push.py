@@ -12,22 +12,21 @@ import redditcleaner
 def humanReadablePost(redditRawText): #Makes body and selftext not an abomination.
     cleaned = redditcleaner.clean(redditRawText).split() #Makes reddit's text formatting readable
 
+    #Spliting post string into sets of 15 words so the output is readable when it reaches it's place within json.
     splitWords = []
     temp = []
     for i, word in enumerate(cleaned):
-
         temp.append(word)
         if i % 15 == 0 and i != 0:
             splitWords.append(temp)
             temp = []
 
+    #
+    #Another way of saying if the number of totalW words % 15 != 0. Need to put the leftover words where they belong
     if len(temp) != 0:
         splitWords.append(temp)
-    outputValue = []
-    for cleanPost in splitWords:
-        wordList = ' '.join(cleanPost)
-        outputValue.append(wordList)
-    #outputValue = [wordSet + '\n' for wordSet in outputValue]
+
+    outputValue = [' '.join(cleanPost) for cleanPost in splitWords] #1D list with each item containing a max of five words.
 
     return outputValue
 
@@ -41,35 +40,38 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
     before = int(round(time.time())) #Subtract off last amp in set, put in pushshift url.
     beginTime = before #To reset time to original value after comments.
     allPosts = {}
+
+    #This for loop is because a lot of the code would have been the same for comments and submissions.
+    #Things like if key == 'body' or key == 'selftext': can deal with a problem both comments and some submissions have.
     for postType in ('comment', 'submission'):
         print()
 
         print('Pushshift ' + postType[0] + postType[1:] + ' request log')
 
-        ct = 0
+        ct = 0 #For logging each batch of posts returned by pushshift.
         posts = []
-        while True:
+        while True: #We need to wait until we've collected all posts then break.
             time.sleep(.75) #Avoids rate limits.
-            url = f'{apiUrl}{postType}/?author={user}&size={postSetMaxLen}&before={before}'
+            url = f'{apiUrl}{postType}/?author={user}&size={postSetMaxLen}&before={before}' #API request varying before while the while loop isn't broken.
             try:
                 response = urllib.request.urlopen(url)
                 data = json.loads(response.read())['data']
 
                 for post in data:
-                    ourKeys = keyType[postType]
-                    apiKeys = post.keys()
+                    ourKeys = keyType[postType] #Getting relevant keys for either a comment or submission.
+                    apiKeys = post.keys() #All pushshift keys for this post, we do not want them all - we need readable output.
 
-                    postDict = dict.fromkeys(ourKeys, None)
+                    postDict = dict.fromkeys(ourKeys, None) #Kinda forgot why this is written like this.
 
-                    for key in ourKeys:
-                        if key in ourKeys and key in apiKeys:
+                    for key in ourKeys: #We are doing things for specific keys, so we need another loop.
+                        if key in ourKeys and key in apiKeys: #To only use the keys we need.
 
                             outputValue = post[key]
 
-                            if key == 'body' or key == 'selftext': #Thanks https://github.com/LoLei for this
+                            if key == 'body' or key == 'selftext': #Thanks redditcleaner making this less painful.
                                 outputValue = humanReadablePost(outputValue)
 
-                            if key == 'created_utc':
+                            if key == 'created_utc': #Create a datetime object from timestamp.
                                 timestamp = int(post[key])
                                 postDict['datetime'] = str(datetime.utcfromtimestamp(timestamp).strftime('%a %b %d %Y, %I:%M %p UTC'))
 
@@ -79,21 +81,21 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
 
                     posts.append(postDict)
 
-                if len(posts) != 0:
-                    before = posts[-1]['created_utc']
+                if len(posts) != 0: #Cause if it is there's something there which means more posts to get.
+                    before = posts[-1]['created_utc'] #Next time we make a request with the last timestamp from the list of posts from this list of posts.
 
-                log = f'{ct+1} - {len(data)} '
-                print('\t' + log + ' ' + url)
-                ct = ct+1
+
+                print('\t' + f'{ct+1} - {len(data)} {url}') #Log for each API request.
+                ct+=1
 
                 if len(data) < postSetMaxLen: #Get 100 posts at a time they switched from 1000?
                     allPosts[postType + 's'] = posts
                     break
 
-            except HTTPError:
+            except HTTPError: #The sleep .75 deals with this.
                 print('Rate limited')
 
-        before = beginTime
+        before = beginTime #before has been decreasing and we don't want it to start at the last comment for the beggining of submissions.
 
     return allPosts
 
@@ -108,6 +110,8 @@ def countPosts(allPosts): #Count and order most posted subs.
             if subreddit is not None:
                 counts[subreddit] = subreddits.count(subreddit)
 
+        #Sort by sub count, lambda let's you reach inside the dict and sort the tuples by the count index.
+        #key=lambda is great.
         sortedCounts = sorted(counts.items(), key=lambda kv:(kv[1], kv[0]), reverse=True)
 
         postCounts[postType] = sortedCounts
@@ -127,7 +131,7 @@ def writeFiles(allPosts, postCounts, user):
         jPath = os.path.join(userDir, f'{user}.json')
         with open(jPath, 'w+', newline='\n') as f:
             json.dump(allPosts, f, indent=4)
-            #f.write(prettyJson)
+
         tPath = os.path.join(userDir, f'{user}.txt')
         with open(tPath, 'w+') as g:
             for k,v in postCounts.items():
@@ -181,7 +185,5 @@ if __name__ == '__main__':
         else:
             run(sys.argv[1])
 
-    elif len(sys.argv) >= 3:
-
-
-        print('Remember to add a username')
+    else:
+        print('Too many arguments')
