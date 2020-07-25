@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import urllib.request
 import json
 import time
@@ -67,9 +68,6 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
 
                             if key == 'body' or key == 'selftext': #Thanks https://github.com/LoLei for this
                                 outputValue = humanReadablePost(outputValue)
-                              
-
-
 
                             if key == 'created_utc':
                                 timestamp = int(post[key])
