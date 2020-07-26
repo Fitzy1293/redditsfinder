@@ -6,13 +6,13 @@
 ***Linux install instructions***\
 `pip3 install redditcleaner` \
 `wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py` \
-`mv push.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder`
+`mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder`
 
 
 
 
 ***Windows & Mac***\
-Copy and paste the code from push.py wherever you want. \
+Copy and paste the code from redditsfinder.py wherever you want. \
 `pip3 install redditcleaner` 
 
 # How to use
