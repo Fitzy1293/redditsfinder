@@ -5,18 +5,14 @@
 
 ***Linux install instructions***\
 `pip3 install redditcleaner` \
-`wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/push.py` \
-`mv push.py ~/bin/redditsfinder`\
-`chmod +x ~/bin/redditsfinder`
+`wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py` \
+`mv push.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder`
 
-***Linux one line install.*** \
-`wget -O - https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/install.sh | bash`
 
 
 
 ***Windows & Mac***\
 Copy and paste the code from push.py wherever you want. \
-Install redditcleaner from pip. \
 `pip3 install redditcleaner` 
 
 # How to use
