@@ -19,3 +19,6 @@ Make sure you're in the redditsfinder directory for the python interpreter way.\
 ![Alt text](images/log.png?raw=true "Optional Title")\
 ![Alt text](images/out.png?raw=true "Optional Title")
 
+# Why bother with this? 
+If you want to archive your own posts it's impossible to do with the reddit API if you have more than 1k posts. 
+The goal was to trim and automate the collection of data from pushshift and improve readability, while adding things like datetime to. 
