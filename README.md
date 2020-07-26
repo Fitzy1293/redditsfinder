@@ -1,19 +1,23 @@
 # redditsfinder - A simple tool to analyze reddit users
 ![Alt text](images/readable.png "Optional Title") 
 ## The goal of this program is ease of use and correctly grabbing every post. <br/> 
-***Linux one line install*** \
-`wget -O - https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/install.sh | bash`
 
-***Contents of install.sh***\
-`cd ~ && pip3 install redditcleaner && mkdir -p redditsfinder && cd redditsfinder && wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/push.py`\
-`mkdir -p ~/bin && cp push.py ~/bin/redditsfinder && cd ~/bin && chmod +x redditsfinder && rm -rf ~/redditsfinder && cd ~`\
-`echo "Successfully installed redditsfinder"`
+
+***Linux install instructions***\
+`pip3 install redditcleaner` \
+`wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/push.py` \
+`mv push.py ~/bin/redditsfinder`
+`chmod +x ~/bin/redditsfinder`
+
+***Linux one line install.*** \
+`wget -O - https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/install.sh | bash`
 
 
 
 ***Windows & Mac***\
 Copy and paste the code from push.py wherever you want. \
-To do the one line install on Windows you could use a linux virtual machine, or get Ubuntu from the Windows store which is apparently possible. 
+Install redditcleaner from pip. \
+`pip3 install redditcleaner` 
 
 # How to use
 If you did the full linux install. `redditsfinder [redditUsername]` \
