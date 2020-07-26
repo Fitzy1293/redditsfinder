@@ -107,7 +107,7 @@ def countPosts(allPosts): #Count and order most posted subs.
             if subreddit is not None:
                 counts[subreddit] = subreddits.count(subreddit)
 
-        #Sort by sub count, lambda let's you reach inside the dict and sort the tuples by the count index.
+        #Sort by sub count, lambda let's you reach inside the dict and sort the tuples by the count.
         #key=lambda is great.
         sortedCounts = sorted(counts.items(), key=lambda kv:(kv[1], kv[0]), reverse=True)
 
