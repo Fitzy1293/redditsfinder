@@ -27,9 +27,9 @@ def humanReadablePost(redditRawText): #Makes body and selftext not an abominatio
     if len(temp) != 0:
         splitWords.append(temp)
 
-    return [' '.join(cleanPost) for cleanPost in splitWords] #1D list with each item containing a max of five words.
+    return [' '.join(cleanPost) for cleanPost in splitWords] #1D list with each item containing a max of 15 words.
 
-def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but works.
+def getPosts(user, keyType): #Uses pushshift API. Functions kind of a mess but works.
 
     apiUrl = 'https://api.pushshift.io/reddit/search/'
     postSetMaxLen = 100 #Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
@@ -83,11 +83,13 @@ def getPosts(user, keyType): #From pushshift API. Functions kind of a mess but w
 
 
                 print('\t' + f'{ct+1} - {len(data)} {url}') #Log for each API request.
-                ct+=1
+
 
                 if len(data) < postSetMaxLen: #Get 100 posts at a time they switched from 1000?
                     allPosts[postType + 's'] = posts
                     break
+
+                ct+=1
 
             except HTTPError: #The sleep .75 deals with this.
                 print('Rate limited')
@@ -107,7 +109,7 @@ def countPosts(allPosts): #Count and order most posted subs.
             if subreddit is not None:
                 counts[subreddit] = subreddits.count(subreddit)
 
-        #Sort by sub count, lambda let's you reach inside the dict and sort the tuples by the count.
+        #Sort by sub count, lambda let's you reach inside the dict and sort the tuples by the count index.
         #key=lambda is great.
         sortedCounts = sorted(counts.items(), key=lambda kv:(kv[1], kv[0]), reverse=True)
 
@@ -150,15 +152,20 @@ def run(user):
 
     allPosts = getPosts(user, keyType)
     print()
-    print('Totals')
 
-    print('\t' + f'Comments = {len(allPosts["comments"])}')
-    print('\t' + f'Submissions = {len(allPosts["submissions"])}')
-    print()
-
+    commentsLen = '\t' + f'Comments = {len(allPosts["comments"])}'
+    submissionsLen = '\t' + f'Submissions = {len(allPosts["submissions"])}'
     counts = countPosts(allPosts)
 
     writeFiles(allPosts, counts, user)
+
+    for line in open(os.path.join(outputDir, 'subreddit_count.txt')).read().splitlines():
+        print(line)
+
+    print('Totals')
+    print(commentsLen)
+    print(submissionsLen)
+    print()
 
     print(outputDir )
     print('\tall_posts.json')
@@ -166,6 +173,8 @@ def run(user):
     print()
 
     print('Run time - ' + f'{round(time.time() - start, 1)} s')
+
+
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
