@@ -23,6 +23,7 @@ Make sure you're in the redditsfinder directory for the python interpreter way.\
 
 # Example terminal output
 ![Alt text](images/log.png?raw=true "Optional Title")\
+![Alt text](images/subRank.png?raw=true "Optional Title")\
 ![Alt text](images/out.png?raw=true "Optional Title")
 
 # Why bother with this? 
