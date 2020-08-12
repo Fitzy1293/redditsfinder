@@ -79,9 +79,8 @@ def getPosts(user, keyType): #Uses pushshift API. Functions kind of a mess but w
                     posts.append(postDict)
 
                 if len(posts) != 0: #Cause if it is there's something there which means more posts to get.
-                    before = posts[-1]['created_utc'] #Next time we make a request with the last timestamp from the list of posts from this list of posts.
-
-
+                    before = posts[-1]['created_utc'] 
+                    
                 print('\t' + f'{ct+1} - {len(data)} {url}') #Log for each API request.
 
 
