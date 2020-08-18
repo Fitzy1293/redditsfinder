@@ -25,7 +25,7 @@ Make sure you're in the redditsfinder directory for the python interpreter way.\
 
 # Example terminal output
 ![Alt text](images/boxed_terminal_example.gif?raw=true "Optional Title")\
-![Alt text](images/log.png?raw=true "Optional Title")\
+![Alt text](images/log.png?raw=true "Optional Title")
 
 # Why bother with this? 
 If you want to archive a reddit user's posts it's impossible to do with the reddit API if there are more than 1k posts. \
