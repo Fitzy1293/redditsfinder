@@ -23,7 +23,7 @@ To run with python. `python3 redditsfinder.py [redditUsername]` \
 Make sure you're in the redditsfinder directory for the python interpreter way.\
 **Make sure you have python3 installed**.
 
-# Example terminal output
+# Example JSON object
 
 ![Imgur Image](https://i.imgur.com/jHcdUKB.png)
 
