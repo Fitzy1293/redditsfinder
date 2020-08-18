@@ -16,7 +16,7 @@ Copy and paste the code from redditsfinder.py wherever you want. \
 `pip3 install redditcleaner` 
 
 # How to use
-![Imgur Image](https://i.imgur.com/yOuflW5.gif)\
+![Imgur Image](https://i.imgur.com/yOuflW5.gif)
 
 If you did the full linux install. `redditsfinder [redditUsername]` \
 To run with python. `python3 redditsfinder.py [redditUsername]` \
