@@ -1,6 +1,6 @@
 # redditsfinder - A simple tool to analyze reddit users
-![Alt text](images/readable.png "Optional Title") 
-## The goal of this program is ease of use and correctly grabbing every post. <br/> 
+
+## The goal of this program is ease of use and correctly grabbing every post from a reddit user. <br/> 
 
 
 ***Linux install instructions***\
@@ -16,6 +16,8 @@ Copy and paste the code from redditsfinder.py wherever you want. \
 `pip3 install redditcleaner` 
 
 # How to use
+![Alt text](images/readable.png "Optional Title") \
+
 If you did the full linux install. `redditsfinder [redditUsername]` \
 To run with python. `python3 redditsfinder.py [redditUsername]` \
 Make sure you're in the redditsfinder directory for the python interpreter way.\
