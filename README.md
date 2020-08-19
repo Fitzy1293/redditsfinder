@@ -7,13 +7,15 @@
 `pip3 install redditcleaner` \
 `wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py` \
 `mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder`
+Feel free to not do the last command if your local bin is at a different path.
 
 
 
 
 ***Windows & Mac***\
-Copy and paste the code from redditsfinder.py wherever you want. \
-`pip3 install redditcleaner` 
+`pip3 install redditcleaner` \
+Copy and paste the code from redditsfinder.py wherever you want. 
+
 
 # How to use
 ![Imgur Image](https://i.imgur.com/yOuflW5.gif)
