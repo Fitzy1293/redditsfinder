@@ -13,7 +13,7 @@ Do the last command with regard to your own .rc.
 `pip3 install redditcleaner` \
 `curl https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py > redditsfinder.py` \
 `mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder`\
-Mac doesn't include wget, so curl it into a new file instead. \
+Mac doesn't include wget, so redirect curl to redditsfinder.py. \
 Might work, haven't tested it though so who knows.
 
 ***Windows***\
