@@ -10,7 +10,6 @@ pip3 install redditcleaner
 wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py
 mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder
 ```
-Do the last command with regard to your own .rc. 
 
 ***Mac***
 ```
@@ -18,7 +17,6 @@ pip3 install redditcleaner
 curl https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py > redditsfinder.py 
 mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder
 ```
-
 Mac doesn't include wget, so redirect curl to redditsfinder.py. \
 Might work, haven't tested it though so who knows.
 
@@ -28,11 +26,10 @@ Run this in PowerShell\
 `wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py -OutFile redditsfinder.py`\
 PowerShell has wget, but unlike on Linux you must specify its output file. 
 
+# Usage
+`python3 redditsfinder.py redditUsername` \
+`redditsfinder redditUsername` if you also made it executable in ~/bin 
 
-If you did the full install on Linux or Mac `redditsfinder redditUsername` \
-To run with python. `python3 redditsfinder.py redditUsername` \
-Make sure you're in the redditsfinder directory for the python interpreter way.\
-**Make sure you have python3 installed**.
 
 
 # Example JSON object
