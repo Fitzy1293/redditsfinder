@@ -1,6 +1,6 @@
 # redditsfinder - A simple tool to analyze reddit users
 
-![Imgur Image](https://i.imgur.com/oMDDzuE.gif)
+![Imgur Image](https://i.imgur.com/fuLrbSh.gif)
 
 
 
