@@ -23,7 +23,7 @@ Run this in PowerShell\
 PowerShell has wget, but unlike on Linux you must specify its output file. 
 
 
-If you did the full Linux or Mac install `redditsfinder redditUsername` \
+If you did the full install on Linux or Mac `redditsfinder redditUsername` \
 To run with python. `python3 redditsfinder.py redditUsername` \
 Make sure you're in the redditsfinder directory for the python interpreter way.\
 **Make sure you have python3 installed**.\
