@@ -3,16 +3,21 @@
 ## The goal of this program is ease of use and correctly grabbing every post from a reddit user. <br/> 
 
 
-***Linux install instructions***\
-`pip3 install redditcleaner` \
-`wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py` \
-`mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder`\
+***Linux install instructions***
+```
+pip3 install redditcleaner 
+wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py
+mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder
+```
 Do the last command with regard to your own .rc. 
 
-***Mac***\
-`pip3 install redditcleaner` \
-`curl https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py > redditsfinder.py` \
-`mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder`\
+***Mac***
+```
+pip3 install redditcleaner 
+curl https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py > redditsfinder.py 
+mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder
+```
+
 Mac doesn't include wget, so redirect curl to redditsfinder.py. \
 Might work, haven't tested it though so who knows.
 
