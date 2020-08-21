@@ -38,7 +38,7 @@ Make sure you're in the redditsfinder directory for the python interpreter way.\
 
 # Example JSON object
 
-![Imgur Image](https://i.imgur.com/jHcdUKB.png)
+![Imgur Image](https://imgur.com/T0RRcSy)
 
 # Why bother with this? 
 If you want to archive a reddit user's posts it's impossible to do with the reddit API if there are more than 1k posts. \
