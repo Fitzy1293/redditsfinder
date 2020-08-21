@@ -22,12 +22,14 @@ Run this in PowerShell\
 PowerShell has wget, but you need to specify it's output file. 
 
 # How to use
+
+If you did the full unix like install. `redditsfinder redditUsername` \
+To run with python. `python3 redditsfinder.py redditUsername` \
+Make sure you're in the redditsfinder directory for the python interpreter way.\
+**Make sure you have python3 installed**.\
+
 ![Imgur Image](https://i.imgur.com/yOuflW5.gif)
 
-If you did the full unix like install. `redditsfinder [redditUsername]` \
-To run with python. `python3 redditsfinder.py [redditUsername]` \
-Make sure you're in the redditsfinder directory for the python interpreter way.\
-**Make sure you have python3 installed**.
 
 # Example JSON object
 
