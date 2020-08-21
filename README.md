@@ -33,7 +33,7 @@ To run with python. `python3 redditsfinder.py redditUsername` \
 Make sure you're in the redditsfinder directory for the python interpreter way.\
 **Make sure you have python3 installed**.
 
-![Imgur Image](https://gfycat.com/pastelgiantafricanaugurbuzzard.gif)
+![gif](https://gfycat.com/pastelgiantafricanaugurbuzzard.gif)
 
 
 # Example JSON object
