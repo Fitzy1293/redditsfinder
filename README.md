@@ -1,6 +1,7 @@
 # redditsfinder - A simple tool to analyze reddit users
 
-## The goal of this program is ease of use and correctly grabbing every post from a reddit user. <br/> 
+![Imgur Image](https://i.imgur.com/TwtfeTS.gif)
+
 
 
 ***Linux install instructions***
@@ -32,8 +33,6 @@ If you did the full install on Linux or Mac `redditsfinder redditUsername` \
 To run with python. `python3 redditsfinder.py redditUsername` \
 Make sure you're in the redditsfinder directory for the python interpreter way.\
 **Make sure you have python3 installed**.
-
-![Imgur Image](https://i.imgur.com/TwtfeTS.gif)
 
 
 # Example JSON object
