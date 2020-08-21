@@ -7,7 +7,7 @@
 `pip3 install redditcleaner` \
 `wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py` \
 `mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder`\
-Do the last command with regard to however you handle creating new commands. 
+Do the last command with regard to your own .rc. 
 
 ***Mac***\
 `pip3 install redditcleaner` \
@@ -17,13 +17,13 @@ Mac doesn't include wget, so curl it into a new file instead. \
 Might work, haven't tested it though so who knows.
 
 ***Windows***\
+`pip3 install redditcleaner`
 Run this in PowerShell\
 `wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py -OutFile redditsfinder.py`\
-PowerShell has wget, but you need to specify it's output file. 
+PowerShell has wget, but unlike on Linux you need to specify it's output file. 
 
-# How to use
 
-If you did the full unix like install. `redditsfinder redditUsername` \
+If you did the full Linux or Mac. `redditsfinder redditUsername` \
 To run with python. `python3 redditsfinder.py redditUsername` \
 Make sure you're in the redditsfinder directory for the python interpreter way.\
 **Make sure you have python3 installed**.\
