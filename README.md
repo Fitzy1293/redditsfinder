@@ -17,7 +17,7 @@ Mac doesn't include wget, so curl it into a new file instead. \
 Might work, haven't tested it though so who knows.
 
 ***Windows***\
-`pip3 install redditcleaner`
+`pip3 install redditcleaner`\
 Run this in PowerShell\
 `wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py -OutFile redditsfinder.py`\
 PowerShell has wget, but unlike on Linux you need to specify it's output file. 
