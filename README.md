@@ -20,7 +20,7 @@ Might work, haven't tested it though so who knows.
 `pip3 install redditcleaner`\
 Run this in PowerShell\
 `wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py -OutFile redditsfinder.py`\
-PowerShell has wget, but unlike on Linux you need to specify it's output file. 
+PowerShell has wget, but unlike on Linux you need to specify its output file. 
 
 
 If you did the full Linux or Mac. `redditsfinder redditUsername` \
