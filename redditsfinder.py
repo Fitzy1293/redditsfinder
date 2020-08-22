@@ -197,23 +197,22 @@ def makeBox(list): #Takes 1 d list of strings, returns str in a box that fits.
 
 def printTotals(totalsDict): #Printed stuff after the pushshift log.
 
-    countableTab = ' ' * 4 #For getting length of string to box because a tab is only one character.
 
     for k, v in totalsDict['postCounts'].items():
         postTypeList = [k]
         for subreddit in v:
 
-            new = f'{countableTab}{subreddit[0]} {subreddit[1]}'
+            new = f'\t{subreddit[0]} {subreddit[1]}'
             postTypeList.append(new)
 
         print(makeBox(postTypeList))
 
     #Box containing # of comments/submissions, dir and path of files, and run time.
-    comments = f'Comments{countableTab}= {totalsDict["commentsLenPrint"]}'
+    comments = f'Comments\t= {totalsDict["commentsLenPrint"]}'
     submissions = f'Submissions = {totalsDict["submissionsLenPrint"]}'
     dir = totalsDict['dir']
-    allPosts = f'{countableTab}all_posts.json'
-    sortedSubreddits = f'{countableTab}sorted_subreddits.txt'  # Could probably use a better filename.
+    allPosts = f'\tall_posts.json'
+    sortedSubreddits = f'\tsorted_subreddits.txt'  # Could probably use a better filename.
     runTime = f'Run time - {round(totalsDict["end"] - totalsDict["start"], 1)} s'
 
 
