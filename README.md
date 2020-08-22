@@ -25,10 +25,7 @@ Mac doesn't include wget, so redirect curl to redditsfinder.py. \
 Might work, haven't tested it though so who knows.
 
 ***Windows***\
-`pip3 install redditcleaner`\
-Run this in PowerShell\
-`wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py -OutFile redditsfinder.py`\
-PowerShell has wget, but unlike on Linux you must specify its output file. 
+Install with git.
 
 # Running redditsfinder
 `python3 redditsfinder.py [options] redditUsername` 
