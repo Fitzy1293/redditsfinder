@@ -40,6 +40,3 @@ Install with git.
 
 # Example JSON object
 ![Imgur Image](https://i.imgur.com/yHR87rG.png)
-
-# Why bother with this? 
-If you want to archive a reddit user's posts it's impossible to do with the reddit API if there are more than 1k posts. \
