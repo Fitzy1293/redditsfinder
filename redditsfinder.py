@@ -219,60 +219,64 @@ def printTotals(totalsDict): #Printed stuff after the pushshift log.
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def imagesdl(images, userDir):
     for i, url in enumerate(images):
-        #if i!= 18: continue
-        response = requests.get(url, stream=True)
-
-        if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
-            urlType = 'image'
-            fileType = f'{url.split(".")[-1]}'
-            imagePath = os.path.join(userDir, f'{str(i+1)}.{fileType}')
-
-        else:
-            urlType = 'zip'
-            fileType = 'urlType'
-            imagePath = os.path.join(userDir, f'{i+1}.zip')
-
-        with open(imagePath, 'wb+') as f:
-            f.write(response.content)
-        dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
-        print(dlLog)
-
         try:
-            bytes = open(imagePath,'rb').read().decode()[1:9]
-            if type(bytes) == str and  bytes[0:2] == 'PK':
-                continue
+            #if i!= 18: continue
+            response = requests.get(url, stream=True)
+
+            if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
+                urlType = 'image'
+                fileType = f'{url.split(".")[-1]}'
+                imagePath = os.path.join(userDir, f'{str(i+1)}.{fileType}')
 
             else:
-                print(f'Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
-                os.remove(imagePath)
-                continue
-        except UnicodeDecodeError as e:
-            pass
+                urlType = 'zip'
+                fileType = 'urlType'
+                imagePath = os.path.join(userDir, f'{i+1}.zip')
 
-        try:
-            with ZipFile(imagePath, 'r') as zipObj:
-                listOfiles = zipObj.namelist()
+            with open(imagePath, 'wb+') as f:
+                f.write(response.content)
+            dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
+            print(dlLog)
+
+            try:
+                bytes = open(imagePath,'rb').read().decode()[1:9]
+                if type(bytes) == str and  bytes[0:2] == 'PK':
+                    continue
+
+                else:
+                    print(f'Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
+                    os.remove(imagePath)
+                    continue
+            except UnicodeDecodeError as e:
+                pass
+
+            try:
+                with ZipFile(imagePath, 'r') as zipObj:
+                    listOfiles = zipObj.namelist()
+
+            except Exception as e:
+                if urlType == 'image':
+                    continue
+
+                imghdrExtension = imghdr.what(imagePath)
+                if str(imghdrExtension) == 'None':
+                    imghdrExtension = 'jpeg'
+
+                newFname = f'{i+1}.{imghdrExtension}'
+
+                newFpath = os.path.join(userDir, newFname)
+                os.rename(imagePath, newFpath)
+
+                logSplit = dlLog.split(' ')
+                logSplit[1] = f'{i+1}.{imghdrExtension}'
+
+                changeExtension = str(i+1) + '.zip => ' + newFname
+
+                spaces = len(logSplit[0] + logSplit[1]) - len(changeExtension) + 4
+                print(f'{changeExtension}{" " * spaces}{e}')
 
         except Exception as e:
-            if urlType == 'image':
-                continue
-
-            imghdrExtension = imghdr.what(imagePath)
-            if str(imghdrExtension) == 'None':
-                imghdrExtension = 'jpeg'
-
-            newFname = f'{i+1}.{imghdrExtension}'
-
-            newFpath = os.path.join(userDir, newFname)
-            os.rename(imagePath, newFpath)
-
-            logSplit = dlLog.split(' ')
-            logSplit[1] = f'{i+1}.{imghdrExtension}'
-
-            changeExtension = str(i+1) + '.zip => ' + newFname
-
-            spaces = len(logSplit[0] + logSplit[1]) - len(changeExtension) + 4
-            print(f'{changeExtension}{" " * spaces}{e}')
+            print(f'Unexpected exception: {e}')
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
