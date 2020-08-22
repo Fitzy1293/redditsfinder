@@ -247,8 +247,6 @@ def run(user, options):
             print()
 
             for i, url in enumerate(images):
-                if i!=3:
-                    continue
 
                 response = requests.get(url, timeout=5)
 
