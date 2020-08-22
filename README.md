@@ -24,14 +24,14 @@ Run this in PowerShell\
 `wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py -OutFile redditsfinder.py`\
 PowerShell has wget, but unlike on Linux you must specify its output file. 
 
-# Usage
-`python3 redditsfinder.py [options] redditUsername` \
+# Running redditsfinder
+`python3 redditsfinder.py [options] redditUsername` 
 
 ***If you made it executable***\
-`redditsfinder [options] redditUsername` \
+`redditsfinder [options] redditUsername` 
 
-***Options***\
-`redditsfinder redditUsername`
+***Arguments***\
+`redditsfinder redditUsername` returns every user post.\
 `-pics` returns URLs of user's image uploads.\
 `-pics -d` downloads them.
 
