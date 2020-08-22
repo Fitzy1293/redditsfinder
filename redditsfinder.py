@@ -249,7 +249,7 @@ def run(user, options):
             for i, url in enumerate(images):
                 #if i!= 18: continue
 
-                response = requests.get(url)
+                response = requests.get(url, stream=True)
 
                 if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
                     fileType = f'{url.split(".")[-1]}'
@@ -260,6 +260,17 @@ def run(user, options):
                     dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" "*4}{url}'
                     print(dlLog)
 
+                    try:
+                        byteID = open(imagePath,'rb').read().decode()[1:]
+                        if type(byteID) == str and  byteID[0:2] == 'PK':
+                            continue
+
+                        else:
+                            print(f'Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
+                            os.remove(imagePath)
+                            continue
+                    except UnicodeDecodeError as e:
+                        pass
 
                     imghdrExtension = imghdr.what(imagePath)
                     if str(imghdrExtension) == 'None':
@@ -311,7 +322,7 @@ def run(user, options):
                         spaces = len(logSplit[0] + logSplit[1]) - len(changeExtension) + 4
                         print(f'{changeExtension}{" " * spaces}{e}')
 
-        print(f'Run time - {round(time.time() - start, 1)} s')
+        print(f'\nRun time - {round(time.time() - start, 1)} s')
 
     else:
         keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink', 'link_id', 'parent_id'),
