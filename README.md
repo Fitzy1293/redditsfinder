@@ -1,10 +1,8 @@
 # redditsfinder - A simple tool to analyze reddit users
-
 ![Imgur Image](https://i.imgur.com/fuLrbSh.gif)
 
-
-
-***Linux install instructions***
+# Installation
+***Linux***
 ```
 pip3 install redditcleaner 
 wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py
@@ -27,13 +25,17 @@ Run this in PowerShell\
 PowerShell has wget, but unlike on Linux you must specify its output file. 
 
 # Usage
-`python3 redditsfinder.py redditUsername` \
-`redditsfinder redditUsername` if you also made it executable in ~/bin 
+`python3 redditsfinder.py [options] redditUsername` \
 
+***If you made it executable***\
+`redditsfinder [options] redditUsername` \
 
+***Options***\
+`redditsfinder redditUsername`
+`-pics` returns URLs of user's image uploads.\
+`-pics -d` downloads them.
 
 # Example JSON object
-
 ![Imgur Image](https://i.imgur.com/yHR87rG.png)
 
 # Why bother with this? 
