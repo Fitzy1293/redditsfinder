@@ -2,6 +2,12 @@
 ![Imgur Image](https://i.imgur.com/fuLrbSh.gif)
 
 # Installation
+****With git***
+```
+pip3 install redditcleaner
+git clone https://github.com/Fitzy1293/redditsfinder.git
+```
+
 ***Linux***
 ```
 pip3 install redditcleaner 
