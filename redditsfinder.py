@@ -15,6 +15,7 @@ from pprint import pprint
 from urllib.error import HTTPError
 from datetime import datetime
 import imghdr
+from zipfile import ZipFile
 
 import redditcleaner
 
@@ -38,7 +39,6 @@ def humanReadablePost(redditRawText):
 
     # 1D list with each item containing a max of 15 words.
     return [' '.join(cleanPost) for cleanPost in splitWords]
-
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -123,7 +123,7 @@ def getPosts(user, keyType, picFlag): # Uses pushshift API. Functions kind of a 
         urls = [v for i in allPosts['submissions']  for k,v in i.items() if k == 'url']
         imageUrls = []
         for url in urls:
-            if url.endswith(('.png', '.PNG', '.jpg','.JPG')):
+            if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
                 imageUrls.append(url)
                 continue
 
@@ -143,7 +143,6 @@ def getPosts(user, keyType, picFlag): # Uses pushshift API. Functions kind of a 
 
     else:
         return allPosts
-
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -163,7 +162,6 @@ def countPosts(allPosts):  # Count and order most posted subs.
         postCounts[f'Sorted {postType}:'] = sortedCounts
 
     return postCounts
-
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -180,19 +178,19 @@ def writeFiles(allPosts, postCounts, user, userDir):
                 g.write(f'{k}\n')
                 for i in v:
                     g.write(f'{i[0]}, {str(i[1])}\n')
-
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 def makeBox(list): #Takes 1 d list of strings, returns str in a box that fits.
-    longestStr = len(max(list, key=len))
-    box = str('─') * (longestStr + 1) #Box drawing char, not dash.
+    fixedTabsList = [i.replace('\t', '    ') for i in list]
+    longestStr = list.count('\t')  + len(max(fixedTabsList, key=len))
+    box = str('─') * (longestStr) #Box drawing char, not dash.
 
-    boxedStr = '\n'.join([f'│{i}{ str(" " * (longestStr + 1 - len(i))) }│' for i in list])
+
+    boxedStr = '\n'.join([f'│{i}{ str(" " * (longestStr - len(i))) }│' for i in fixedTabsList])
 
     return f'┌{box}┐\n{boxedStr}\n└{box}┘' #(U+2518) and (U+2510) box drawing chars respecitvely.
-
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -222,7 +220,6 @@ def printTotals(totalsDict): #Printed stuff after the pushshift log.
     infoToBox = [comments, submissions, '', dir, allPosts, sortedSubreddits, '', runTime]
 
     print(makeBox(infoToBox))
-
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -243,37 +240,81 @@ def run(user, options):
         images = getPosts(user, keyType, True)
 
         images = open( os.path.join(userDir,'images.txt')).read().splitlines()
-        for i, image in enumerate(images):
-            print(f'{i+1}\t{image}')
+        boxedImages = [f'Images submitted by {user}'] + [f'{i+1}\t{image}' for i, image in enumerate(images)]
+        print(makeBox(boxedImages))
 
         if '-d' in options:
             print()
 
             for i, url in enumerate(images):
+                if i!=3:
+                    continue
 
-                response = requests.get(url, timeout=10)
+                response = requests.get(url, timeout=5)
 
-                if url.endswith(('.png', '.PNG', '.jpg','.JPG')):
+                if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
                     fileType = f'{url.split(".")[-1]}'
                     imagePath = os.path.join(userDir, f'{str(i+1)}.{fileType}')
+                    with open(imagePath, 'wb+') as f:
+                        f.write(response.content)
+
+                    dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" "*4}{url}'
+                    print(dlLog)
+
+
+                    imghdrExtension = imghdr.what(imagePath)
+                    if str(imghdrExtension) == 'None':
+                        imghdrExtension = 'jpeg'
+
+                    realFileType = f'{"".join(imagePath.split(".")[0:-1])}.{imghdrExtension}' #Checks filetype not by extension.
+                    newFpath = os.path.join(userDir, realFileType)
+                    os.rename(imagePath, newFpath)
 
                 else:
                     imagePath = os.path.join(userDir, f'{i+1}.zip')
 
-                with open(imagePath, 'wb+') as f:
-                    f.write(response.content)
+                    with open(imagePath, 'wb+') as f:
+                        f.write(response.content)
+                    dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
 
-                imghdrExtension = imghdr.what(imagePath)
-                if str(imghdrExtension) == 'None':
-                    imghdrExtension = 'jpeg'
+                    try:
+                        byteID = open(imagePath,'rb').read()[1:8].decode()
+                        if byteID == u'download link expired':
+                            print(str('Download link expired'))
+                            print(f'Download link expired {os.path.split(imagePath)[-1]}{" " * 4}{url}')
+                            os.remove(imagePath)
+                            continue
+                    except UnicodeDecodeError as e:
+                        print(dlLog)
 
-                realFileType = f'{"".join(imagePath.split(".")[0:-1])}.{imghdrExtension}' #Checks filetype not by extension.
-                newFname = os.path.join(userDir, realFileType)
-                os.rename(imagePath, newFname)
-                imagePath = newFname
 
-                print(f'Downloaded {os.path.split(imagePath)[-1]}\t{url}' )
-                time.sleep(.25)
+
+
+                    try:
+                        with ZipFile(imagePath, 'r') as zipObj:
+                            listOfiles = zipObj.namelist()
+                        print(dlog)
+
+                    except Exception as e:
+                        imghdrExtension = imghdr.what(imagePath)
+                        if str(imghdrExtension) == 'None':
+                            imghdrExtension = 'jpeg'
+
+                        newExtension = f'{i+1}.{imghdrExtension}'
+
+                        newFpath = os.path.join(userDir, newExtension)
+                        os.rename(imagePath, newFpath)
+
+                        logSplit = dlLog.split(' ')
+                        logSplit[1] = f'{i+1}.{imghdrExtension}'
+
+                        changeExtension = str(i+1) + '.zip => ' +  str(i+1) + newExtension
+
+                        spaces = len(logSplit[0] + logSplit[1]) - len(changeExtension) + 4
+                        print(f'{changeExtension}{" " * spaces}{e}')
+
+        print(f'Run time - {round(time.time() - start, 1)} s')
+
 
 
     else:
