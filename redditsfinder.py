@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
+
 '''
 github.com/fitzy1293/redditsfinder
 The README.md is helpful
+
 '''
 
 import urllib.request, requests
@@ -252,27 +254,26 @@ def run(user, options):
                 response = requests.get(url, timeout=10)
 
                 if url.endswith(('.png', '.PNG', '.jpg','.JPG')):
-                    fileType = f'.{url.split(".")[-1]}'
-                    imagePath = os.path.join(userDir, f'{str(i+1)}{fileType}')
-                    with open(imagePath, 'wb+') as f:
-                        f.write(response.content)
-
-                    imghdrExtension = imghdr.what(imagePath) #Makes some jpg None?
-                    if str(imghdrExtension) == 'None':
-                        imghdrExtension = 'jpeg'
-
-                    realFileType = f'{"".join(imagePath.split(".")[0:-1])}.{imghdrExtension}' #Checks filetype not by extension.
-                    newFname = os.path.join(userDir, realFileType)
-                    os.rename(imagePath, newFname)
-                    imagePath = newFname
+                    fileType = f'{url.split(".")[-1]}'
+                    imagePath = os.path.join(userDir, f'{str(i+1)}.{fileType}')
 
                 else:
-
                     imagePath = os.path.join(userDir, f'{i+1}.zip')
-                    with open(imagePath, 'wb+') as f:
-                        f.write(response.content)
+
+                with open(imagePath, 'wb+') as f:
+                    f.write(response.content)
+
+                imghdrExtension = imghdr.what(imagePath)
+                if str(imghdrExtension) == 'None':
+                    imghdrExtension = 'jpeg'
+
+                realFileType = f'{"".join(imagePath.split(".")[0:-1])}.{imghdrExtension}' #Checks filetype not by extension.
+                newFname = os.path.join(userDir, realFileType)
+                os.rename(imagePath, newFname)
+                imagePath = newFname
 
                 print(f'Downloaded {os.path.split(imagePath)[-1]}\t{url}' )
+                time.sleep(.25)
 
 
     else:
