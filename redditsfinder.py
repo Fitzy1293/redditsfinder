@@ -240,6 +240,7 @@ def run(user, options):
         images = getPosts(user, keyType, True)
 
         images = open( os.path.join(userDir,'images.txt')).read().splitlines()
+        print(f'Images submitted by {user}')
         boxedImages = [f'Images submitted by {user}'] + [f'{i+1}\t{image}' for i, image in enumerate(images)]
         print(makeBox(boxedImages))
 
@@ -247,6 +248,7 @@ def run(user, options):
             print()
 
             for i, url in enumerate(images):
+                #if i!= 18: continue
 
                 response = requests.get(url, timeout=5)
 
@@ -274,19 +276,16 @@ def run(user, options):
                     with open(imagePath, 'wb+') as f:
                         f.write(response.content)
                     dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
+                    print(dlLog)
 
                     try:
-                        byteID = open(imagePath,'rb').read()[1:8].decode()
-                        if byteID == u'download link expired':
-                            print(str('Download link expired'))
-                            print(f'Download link expired {os.path.split(imagePath)[-1]}{" " * 4}{url}')
+                        byteID = open(imagePath,'rb').read().decode()
+                        if isinstance(byteID, str):
+                            print(f'Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
                             os.remove(imagePath)
                             continue
                     except UnicodeDecodeError as e:
-                        print(dlLog)
-
-
-
+                        pass
 
                     try:
                         with ZipFile(imagePath, 'r') as zipObj:
@@ -298,22 +297,20 @@ def run(user, options):
                         if str(imghdrExtension) == 'None':
                             imghdrExtension = 'jpeg'
 
-                        newExtension = f'{i+1}.{imghdrExtension}'
+                        newFname = f'{i+1}.{imghdrExtension}'
 
-                        newFpath = os.path.join(userDir, newExtension)
+                        newFpath = os.path.join(userDir, newFname)
                         os.rename(imagePath, newFpath)
 
                         logSplit = dlLog.split(' ')
                         logSplit[1] = f'{i+1}.{imghdrExtension}'
 
-                        changeExtension = str(i+1) + '.zip => ' +  str(i+1) + newExtension
+                        changeExtension = str(i+1) + '.zip => ' + newFname
 
                         spaces = len(logSplit[0] + logSplit[1]) - len(changeExtension) + 4
                         print(f'{changeExtension}{" " * spaces}{e}')
 
         print(f'Run time - {round(time.time() - start, 1)} s')
-
-
 
     else:
         keyType = {'comment': ('id', 'created_utc', 'subreddit', 'body', 'score', 'permalink', 'link_id', 'parent_id'),
