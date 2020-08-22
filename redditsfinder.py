@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-
 '''
 github.com/fitzy1293/redditsfinder
 The README.md is helpful
@@ -17,10 +16,12 @@ from datetime import datetime
 import imghdr
 from zipfile import ZipFile
 
-import redditcleaner
+import redditcleaner #Not in standard lib.
 
-# Makes body and selftext not an abomination.
-def humanReadablePost(redditRawText):
+#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#=============================================================================================================================
+#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+def humanReadablePost(redditRawText): # Makes body and selftext not an abomination.
     # Makes reddit's text formatting readable
     cleaned = redditcleaner.clean(redditRawText).split()
 
@@ -165,7 +166,6 @@ def countPosts(allPosts):  # Count and order most posted subs.
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-
 def writeFiles(allPosts, postCounts, user, userDir):
     if len(allPosts) != 0:
         jPath = os.path.join(userDir, 'all_posts.json')
@@ -181,23 +181,18 @@ def writeFiles(allPosts, postCounts, user, userDir):
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-
 def makeBox(list): #Takes 1 d list of strings, returns str in a box that fits.
     fixedTabsList = [i.replace('\t', '    ') for i in list]
     longestStr = list.count('\t')  + len(max(fixedTabsList, key=len))
+
     box = str('─') * (longestStr) #Box drawing char, not dash.
-
-
     boxedStr = '\n'.join([f'│{i}{ str(" " * (longestStr - len(i))) }│' for i in fixedTabsList])
 
     return f'┌{box}┐\n{boxedStr}\n└{box}┘' #(U+2518) and (U+2510) box drawing chars respecitvely.
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-
 def printTotals(totalsDict): #Printed stuff after the pushshift log.
-
-
     for k, v in totalsDict['postCounts'].items():
         postTypeList = [k]
         for subreddit in v:
@@ -219,6 +214,65 @@ def printTotals(totalsDict): #Printed stuff after the pushshift log.
     infoToBox = [comments, submissions, '', dir, allPosts, sortedSubreddits, '', runTime]
 
     print(makeBox(infoToBox))
+#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#=============================================================================================================================
+#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+def imagesdl(images, userDir):
+    for i, url in enumerate(images):
+        #if i!= 18: continue
+        response = requests.get(url, stream=True)
+
+        if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
+            urlType = 'image'
+            fileType = f'{url.split(".")[-1]}'
+            imagePath = os.path.join(userDir, f'{str(i+1)}.{fileType}')
+
+        else:
+            urlType = 'zip'
+            fileType = 'urlType'
+            imagePath = os.path.join(userDir, f'{i+1}.zip')
+
+        with open(imagePath, 'wb+') as f:
+            f.write(response.content)
+        dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
+        print(dlLog)
+
+        try:
+            bytes = open(imagePath,'rb').read().decode()[1:9]
+            if type(bytes) == str and  bytes[0:2] == 'PK':
+                continue
+
+            else:
+                print(f'Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
+                os.remove(imagePath)
+                continue
+        except UnicodeDecodeError as e:
+            pass
+
+        try:
+            with ZipFile(imagePath, 'r') as zipObj:
+                listOfiles = zipObj.namelist()
+
+        except Exception as e:
+            if urlType == 'image':
+                continue
+
+            imghdrExtension = imghdr.what(imagePath)
+            if str(imghdrExtension) == 'None':
+                imghdrExtension = 'jpeg'
+
+            newFname = f'{i+1}.{imghdrExtension}'
+
+            newFpath = os.path.join(userDir, newFname)
+            os.rename(imagePath, newFpath)
+
+            logSplit = dlLog.split(' ')
+            logSplit[1] = f'{i+1}.{imghdrExtension}'
+
+            changeExtension = str(i+1) + '.zip => ' + newFname
+
+            spaces = len(logSplit[0] + logSplit[1]) - len(changeExtension) + 4
+            print(f'{changeExtension}{" " * spaces}{e}')
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -245,82 +299,7 @@ def run(user, options):
 
         if '-d' in options:
             print()
-
-            for i, url in enumerate(images):
-                #if i!= 18: continue
-
-                response = requests.get(url, stream=True)
-
-                if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
-                    fileType = f'{url.split(".")[-1]}'
-                    imagePath = os.path.join(userDir, f'{str(i+1)}.{fileType}')
-                    with open(imagePath, 'wb+') as f:
-                        f.write(response.content)
-
-                    dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" "*4}{url}'
-                    print(dlLog)
-
-                    try:
-                        byteID = open(imagePath,'rb').read().decode()[1:]
-                        if type(byteID) == str and  byteID[0:2] == 'PK':
-                            continue
-
-                        else:
-                            print(f'Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
-                            os.remove(imagePath)
-                            continue
-                    except UnicodeDecodeError as e:
-                        pass
-
-                    imghdrExtension = imghdr.what(imagePath)
-                    if str(imghdrExtension) == 'None':
-                        imghdrExtension = 'jpeg'
-
-                    realFileType = f'{"".join(imagePath.split(".")[0:-1])}.{imghdrExtension}' #Checks filetype not by extension.
-                    newFpath = os.path.join(userDir, realFileType)
-                    os.rename(imagePath, newFpath)
-
-                else:
-                    imagePath = os.path.join(userDir, f'{i+1}.zip')
-
-                    with open(imagePath, 'wb+') as f:
-                        f.write(response.content)
-                    dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
-                    print(dlLog)
-
-                    try:
-                        byteID = open(imagePath,'rb').read().decode()[1:]
-                        if type(byteID) == str and  byteID[0:2] == 'PK':
-                            continue
-
-                        else:
-                            print(f'Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
-                            os.remove(imagePath)
-                            continue
-                    except UnicodeDecodeError as e:
-                        pass
-
-                    try:
-                        with ZipFile(imagePath, 'r') as zipObj:
-                            listOfiles = zipObj.namelist()
-
-                    except Exception as e:
-                        imghdrExtension = imghdr.what(imagePath)
-                        if str(imghdrExtension) == 'None':
-                            imghdrExtension = 'jpeg'
-
-                        newFname = f'{i+1}.{imghdrExtension}'
-
-                        newFpath = os.path.join(userDir, newFname)
-                        os.rename(imagePath, newFpath)
-
-                        logSplit = dlLog.split(' ')
-                        logSplit[1] = f'{i+1}.{imghdrExtension}'
-
-                        changeExtension = str(i+1) + '.zip => ' + newFname
-
-                        spaces = len(logSplit[0] + logSplit[1]) - len(changeExtension) + 4
-                        print(f'{changeExtension}{" " * spaces}{e}')
+            imagesdl(images, userDir)
 
         print(f'\nRun time - {round(time.time() - start, 1)} s')
 
@@ -332,7 +311,6 @@ def run(user, options):
         postCounts = countPosts(allPosts)
         writeFiles(allPosts, postCounts, user, userDir)
 
-
         totalsDict = {'postCounts': postCounts,
                       'commentsLenPrint': str( len(allPosts['comments']) ),
                       'submissionsLenPrint': str( len(allPosts['submissions']) ),
@@ -341,7 +319,6 @@ def run(user, options):
                       'end': time.time()}
 
         printTotals(totalsDict)
-
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
