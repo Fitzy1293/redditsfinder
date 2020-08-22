@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 
-
 '''
 github.com/fitzy1293/redditsfinder
 The README.md is helpful
-
 '''
 
 import urllib.request, requests
