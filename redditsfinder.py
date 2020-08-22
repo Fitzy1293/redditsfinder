@@ -238,9 +238,10 @@ def imagesdl(images, userDir):
             dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
             print(dlLog)
 
+
             try:
                 bytes = open(imagePath,'rb').read().decode()[1:9]
-                if type(bytes) == str and  bytes[0:2] == 'PK':
+                if type(bytes) == str and  bytes[0:2] == 'PK': #A zip file
                     continue
 
                 else:
@@ -250,6 +251,19 @@ def imagesdl(images, userDir):
             except UnicodeDecodeError as e:
                 pass
 
+            changedFlag = False
+            imghdrExtension = imghdr.what(imagePath)
+            if str(imghdrExtension) == 'None':
+                imghdrExtension = 'jpeg'
+                changedFlag = True
+
+            if urlType == 'image' and not changedFlag:
+                newFname = f'{i+1}.{imghdrExtension}'
+
+                newFpath = os.path.join(userDir, newFname)
+                os.rename(imagePath, newFpath)
+
+
             try:
                 with ZipFile(imagePath, 'r') as zipObj:
                     listOfiles = zipObj.namelist()
@@ -257,10 +271,6 @@ def imagesdl(images, userDir):
             except Exception as e:
                 if urlType == 'image':
                     continue
-
-                imghdrExtension = imghdr.what(imagePath)
-                if str(imghdrExtension) == 'None':
-                    imghdrExtension = 'jpeg'
 
                 newFname = f'{i+1}.{imghdrExtension}'
 
@@ -276,7 +286,7 @@ def imagesdl(images, userDir):
                 print(f'{changeExtension}{" " * spaces}{e}')
 
         except Exception as e:
-            print(f'Unexpected exception: {e}')
+            print(f'{i} {url} unexpected exception: {e}')
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
