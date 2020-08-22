@@ -40,3 +40,6 @@ Install with git.
 
 # Example JSON object
 ![Imgur Image](https://i.imgur.com/yHR87rG.png)
+
+# Example images download
+![Imgur Image](https://imgur.com/b1XPVcZ)
