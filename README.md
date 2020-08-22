@@ -42,4 +42,4 @@ Install with git.
 ![Imgur Image](https://i.imgur.com/yHR87rG.png)
 
 # Example images download
-![Imgur Image](https://imgur.com/b1XPVcZ)
+![Imgur Image](https://imgur.com/b1XPVcZ.png)
