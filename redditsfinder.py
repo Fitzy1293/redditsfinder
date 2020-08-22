@@ -240,7 +240,7 @@ def run(user, options):
         images = getPosts(user, keyType, True)
 
         images = open( os.path.join(userDir,'images.txt')).read().splitlines()
-        print(f'Images submitted by {user}')
+        images = set(images)
         boxedImages = [f'Images submitted by {user}'] + [f'{i+1}\t{image}' for i, image in enumerate(images)]
         print(makeBox(boxedImages))
 
@@ -250,7 +250,7 @@ def run(user, options):
             for i, url in enumerate(images):
                 #if i!= 18: continue
 
-                response = requests.get(url, timeout=5)
+                response = requests.get(url)
 
                 if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
                     fileType = f'{url.split(".")[-1]}'
@@ -279,8 +279,11 @@ def run(user, options):
                     print(dlLog)
 
                     try:
-                        byteID = open(imagePath,'rb').read().decode()
-                        if isinstance(byteID, str):
+                        byteID = open(imagePath,'rb').read().decode()[1:]
+                        if type(byteID) == str and  byteID[0:2] == 'PK':
+                            continue
+
+                        else:
                             print(f'Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
                             os.remove(imagePath)
                             continue
@@ -290,7 +293,6 @@ def run(user, options):
                     try:
                         with ZipFile(imagePath, 'r') as zipObj:
                             listOfiles = zipObj.namelist()
-                        print(dlog)
 
                     except Exception as e:
                         imghdrExtension = imghdr.what(imagePath)
