@@ -8,6 +8,7 @@
 ```
 pip3 install redditcleaner
 git clone https://github.com/Fitzy1293/redditsfinder.git
+cd redditsfinder
 ```
 
 ***Linux***
