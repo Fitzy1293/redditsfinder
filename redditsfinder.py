@@ -3,7 +3,6 @@
 '''
 github.com/fitzy1293/redditsfinder
 The README.md is helpful
-
 '''
 
 import urllib.request, requests
@@ -22,7 +21,6 @@ import redditcleaner #Not in standard lib.
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def humanReadablePost(redditRawText): # Makes body and selftext not an abomination.
-    # Makes reddit's text formatting readable
     cleaned = redditcleaner.clean(redditRawText).split()
 
     # Spliting post string into sets of 15 words so the output is readable when it reaches it's place within json.
@@ -38,7 +36,6 @@ def humanReadablePost(redditRawText): # Makes body and selftext not an abominati
     if len(temp) != 0:
         splitWords.append(temp)
 
-    # 1D list with each item containing a max of 15 words.
     return [' '.join(cleanPost) for cleanPost in splitWords]
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
@@ -54,12 +51,10 @@ def getPosts(user, keyType, picFlag): # Uses pushshift API. Functions kind of a 
     beginTime = before  # To reset time to original value after comments.
     allPosts = {}
 
-
     if picFlag:
         correctPostType = ['submission']
     else:
         correctPostType = ['comment', 'submission']
-
 
     for postType in correctPostType:
 
@@ -75,10 +70,7 @@ def getPosts(user, keyType, picFlag): # Uses pushshift API. Functions kind of a 
                 data = json.loads(response.read())['data']
 
                 for post in data:
-                    # Relevant keys for either a comment or submission.
                     ourKeys = keyType[postType]
-
-
                     postDict = dict.fromkeys(ourKeys, None)
 
                     for key in ourKeys:  # We are doing things for specific keys, so we need another loop.
@@ -88,7 +80,6 @@ def getPosts(user, keyType, picFlag): # Uses pushshift API. Functions kind of a 
                             # Thanks redditcleaner making this less painful.
                             if key == 'body' or key == 'selftext':
                                 outputValue = humanReadablePost(outputValue)
-
 
                             # Create a datetime object from timestamp.
                             if key == 'created_utc':
@@ -110,7 +101,6 @@ def getPosts(user, keyType, picFlag): # Uses pushshift API. Functions kind of a 
 
                 if len(data) < postSetMaxLen:  # Get 100 posts at a time they switched from 1000?
                     allPosts[postType + 's'] = posts
-
                     break
 
             except HTTPError:  # The sleep .75 deals with this.
@@ -195,8 +185,8 @@ def makeBox(list): #Takes 1 d list of strings, returns str in a box that fits.
 def printTotals(totalsDict): #Printed stuff after the pushshift log.
     for k, v in totalsDict['postCounts'].items():
         postTypeList = [k]
-        for subreddit in v:
 
+        for subreddit in v:
             new = f'\t{subreddit[0]} {subreddit[1]}'
             postTypeList.append(new)
 
@@ -238,7 +228,6 @@ def imagesdl(images, userDir):
             dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
             print(dlLog)
 
-
             try:
                 bytes = open(imagePath,'rb').read().decode()[1:9]
                 if type(bytes) == str and  bytes[0:2] == 'PK': #A zip file
@@ -262,7 +251,6 @@ def imagesdl(images, userDir):
 
                 newFpath = os.path.join(userDir, newFname)
                 os.rename(imagePath, newFpath)
-
 
             try:
                 with ZipFile(imagePath, 'r') as zipObj:
@@ -298,7 +286,6 @@ def run(user, options):
     for dir in (usersDir, userDir):
         if not os.path.exists(dir):
             os.mkdir(dir)
-
 
     print(f'Gathering and formatting data from pushshift for {user}.\n')
 
@@ -349,7 +336,6 @@ if __name__ == '__main__':  # System arguments.
             print('Adding more options soon')
         else:
             run(sys.argv[-1], [''])
-
 
     elif len(sys.argv) >= 3:
         optArgs = [arg for arg in sys.argv[1:-1]]
