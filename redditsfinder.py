@@ -18,7 +18,7 @@ from rich.table import Table,Column
 from rich.console import Console
 
 import redditsfinder_utils as redtil
-
+import after_run_parsing as postrun
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -153,7 +153,7 @@ def printTotals(totalsDict): #Printed stuff after the pushshift log.
                 f'[magenta underline]{round(totalsDict["end"] - totalsDict["start"], 1)} s'
     )
 
-    console.print(table, justify='center', style='bold white')
+    console.print(table, justify='left', style='bold white')
 
     print()
     console.print(f'\n\nArchive of reddit user {totalsDict["user"]}:', style="#af00ff")
@@ -206,6 +206,7 @@ def run(user, options):
                       'end': time.time(),
                       'user':user}
 
+        postrun.shortened(os.path.join(userDir, 'all_posts.json'))
         printTotals(totalsDict)
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================

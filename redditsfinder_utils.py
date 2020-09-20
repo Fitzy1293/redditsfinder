@@ -63,7 +63,7 @@ def writeFiles(allPosts, postCounts, user, userDir):
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def imagesdl(images, userDir):
+def imagesdl(images, userDir): #Needs to deal with all the nonsense involved with image formatting
     console = Console()
     for i, url in enumerate(images):
         try:
