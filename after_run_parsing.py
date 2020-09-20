@@ -8,7 +8,7 @@ def shortened(jsonPath):
     with open(jsonPath) as f:
         data = json.load(f)
 
-    console.print('[bold blue]Comment URLs:')
+    console.print('[bold blue]Comments:')
     for comment in  data['comments']:
         if comment["permalink"] is None:
             continue
@@ -17,7 +17,7 @@ def shortened(jsonPath):
 
         console.print(f'[cyan]\t{urlShort}')
 
-    console.print('[bold blue]\nSubmission URLs:')
+    console.print('[bold blue]\nSubmissions:')
     for submission in data['submissions']:
         if submission["full_link"] is None:
             continue
