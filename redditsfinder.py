@@ -129,6 +129,7 @@ def printTotals(totalsDict): #Printed stuff after the pushshift log.
             f'[bold red]{totalsDict["commentsLen"]}[/bold red]',
             'Submissions count',
             f'[bold red]{totalsDict["submissionsLen"]}[/bold red]',
+            totalsDict["dir"],
             'Run Time'
     ]
 
@@ -150,15 +151,12 @@ def printTotals(totalsDict): #Printed stuff after the pushshift log.
                 commentsCt,
                 f'[purple]{submissionsColumn}[/purple]',
                 submissionsCt,
+                '[#f08a05]all_posts.json\nsubreddit_count.txt',
                 f'[magenta underline]{round(totalsDict["end"] - totalsDict["start"], 1)} s'
     )
 
     console.print(table, justify='left', style='bold white')
 
-    print()
-    console.print(f'\n\nArchive of reddit user {totalsDict["user"]}:', style="#af00ff")
-    console.print(f'[underline magenta]dir = {totalsDict["dir"]}')
-    console.print(f'[bold red]\tall_posts.json\n\tsubreddit_count.txt[/bold red]')
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
