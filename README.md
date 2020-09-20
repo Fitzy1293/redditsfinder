@@ -15,14 +15,14 @@ cd redditsfinder
 
 ***Linux***
 ```
-pip3 install redditcleaner 
+pip3 install redditcleaner rich
 wget https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py
 mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder
 ```
 
 ***Mac***
 ```
-pip3 install redditcleaner 
+pip3 install redditcleaner rich
 curl https://raw.githubusercontent.com/Fitzy1293/redditsfinder/master/redditsfinder.py > redditsfinder.py 
 mv redditsfinder.py ~/bin/redditsfinder && chmod +x ~/bin/redditsfinder
 ```
