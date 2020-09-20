@@ -8,7 +8,7 @@
 # Installation
 ***With git (easiest method)***
 ```
-pip3 install redditcleaner
+pip3 install redditcleaner rich
 git clone https://github.com/Fitzy1293/redditsfinder.git
 cd redditsfinder
 ```
