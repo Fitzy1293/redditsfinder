@@ -4,13 +4,21 @@ Get any reddit user's entire post history with one command while avoiding the re
 The main meat of this program is making the requests to pushshift and parsing and formatting the all_posts.json file. \
 The terminal syntax highlighting is from `pip install rich`.
 
-# Installation
+# Installation and a sample run
 ***With git (easiest method)***
 ```
 pip3 install redditcleaner rich
 git clone https://github.com/Fitzy1293/redditsfinder.git
 cd redditsfinder
 ```
+Now test if it works. 
+
+```
+python3 redditsfinder.py 'yourUsername'
+```
+That's all there is to setup. 
+
+
 # Running redditsfinder
 
 ![Imgur Image](https://i.imgur.com/E4EAYAI.png) 
