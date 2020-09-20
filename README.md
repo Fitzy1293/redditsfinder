@@ -1,7 +1,8 @@
 # redditsfinder - A simple tool to analyze reddit users
-**A command line program to easily view a reddit user's posts.**
-
-
+**A command line program to easily view reddit users' posts.** \
+Get any reddit user's entire post history with one command while avoiding the reddit API. \
+The main meat of this program is making the requests to pushshift and parsing and formatting the all_posts.json file. \
+The terminal syntax highlighting is from `pip install rich`.
 
 # Installation
 ***With git (easiest method)***
