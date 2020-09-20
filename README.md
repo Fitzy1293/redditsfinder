@@ -47,3 +47,6 @@ Install with git.
 # Example JSON object
 ![Imgur Image](https://i.imgur.com/yHR87rG.png)
 
+# Example use of -pics -d
+![Imgur Image](https://i.imgur.com/8MMLhMD.png)
+
