@@ -33,7 +33,7 @@ That's all there is to setup.
 `python3 redditsfinder.py [options] redditUsername` 
 
 ***If you made it executable***\
-`redditsfinder [options] redditUsername` 
+`./redditsfinder [options] redditUsername` 
 
 ***Arguments***\
 `redditsfinder redditUsername` returns every user post.\
