@@ -1,7 +1,9 @@
 # redditsfinder - A simple tool to analyze reddit users
 **A command line program to get past the 1000 post API limit for a reddit user.**
 <br>
-![Imgur Image](https://i.imgur.com/fuLrbSh.gif)
+![Imgur Image](https://i.imgur.com/u59i2Qq.png)
+![Imgur Image](https://i.imgur.com/k4dEG7F.png)
+![Imgur Image](https://i.imgur.com/9DatCOJ.png)
 
 # Installation
 ***With git (easiest method)***
