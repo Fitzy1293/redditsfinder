@@ -1,7 +1,7 @@
 # redditsfinder 
 **A command line program to easily view reddit users' post histories.** \
-Get any reddit user's entire post history with one command while avoiding the reddit API. \
-The main meat of this program is making the requests to pushshift and parsing and formatting the all_posts.json file. \
+Get any reddit user's entire post history with one command while avoiding the reddit API's 1000 post limit. \
+The main meat of this program is making the requests to pushshift and parsing and formatting and parsing the responses for the user's all_posts.json file. \
 The terminal syntax highlighting is from `pip install rich`.
 
 # Installation and a sample run
