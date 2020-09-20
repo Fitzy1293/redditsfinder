@@ -1,5 +1,5 @@
 # redditsfinder 
-**A command line program to easily view reddit users' post histories.** \
+**A command line program to easily download reddit users' post histories.** \
 Get any reddit user's entire post history with one command while avoiding the reddit API's 1000 post limit. \
 The main meat of this program is making the requests to pushshift and manipulating pushshift's JSON for a more readable all_posts.json file. \
 There is also a handly image downloader I made that avoids a lot of the problems of trying to grab multiple images from different sites at once. Things like file types being not what the file is encoded as, and changed URLs. Or a URL that ends with .png that returns ASCII text. It gets imgur albums along with images, because at least for a while imgur was essentially reddit's non-official image hosting service. 
