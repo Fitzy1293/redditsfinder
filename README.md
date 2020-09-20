@@ -6,7 +6,9 @@ There is also a handly image downloader I made that avoids a lot of the problems
 
 
 The terminal syntax highlighting is from https://github.com/willmcgugan/rich \
-`pip install rich` which is one the coolest python packages I've seen. 
+`pip3 install rich` which is one the coolest python packages I've seen. \
+
+https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a massive help for dealing with reddit's strange markup. 
 
 # Installation and a sample run
 ***With git (easiest method)***
