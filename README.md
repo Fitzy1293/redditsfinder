@@ -21,7 +21,7 @@ That's all there is to setup.
 
 # Running redditsfinder
 
-![Imgur Image](https://i.imgur.com/E4EAYAI.png) 
+![Imgur Image](https://i.imgur.com/BvQP4c5.png) 
 
 ***In the directory where you installed redditsfinder.py***\
 `python3 redditsfinder.py [options] redditUsername` 
