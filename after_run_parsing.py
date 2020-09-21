@@ -4,6 +4,8 @@ from rich.table import Table,Column
 from rich.console import Console
 
 def shortenUrl(postType, postObjectsList, maxPrint): #Shortens URLs and formats for console.print()
+    consolePrintableStr = ''
+
     if postType == 'comments':
         highlight = '[cyan]'
         pushshiftUrlAttribute = 'permalink'
