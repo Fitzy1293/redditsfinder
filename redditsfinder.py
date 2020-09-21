@@ -2,7 +2,11 @@
 
 '''
 github.com/fitzy1293/redditsfinder
-The README.md is helpful
+TO DO:
+    - REFACTOR getPosts. Name it something more appropriate relating to the fact that it gets the pushshift data.
+    - Implement argparse instead of doing sys.argv[] conditions. Just learned about it and it is clearly much better.
+        - Easily can do things like allow arbitrary numbers of users to be entered in one command.
+
 '''
 
 import urllib.request
@@ -12,7 +16,7 @@ import os,sys
 from pprint import pprint
 from urllib.error import HTTPError
 from datetime import datetime
-
+from pathlib import Path
 
 from rich.table import Table,Column
 from rich.console import Console
@@ -120,14 +124,16 @@ def getPosts(user, keyType, correctPostType): # Uses pushshift API. Functions ki
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def printTotals(totalsDict): #Printed stuff after the pushshift log.
+def printTotals(totalsDict, userDir): #Printed stuff after the pushshift log.
     print('\n\n')
     console = Console()
 
     header = [
-            'Comments count',
+            'Recent comments:\nsubmissionID/comment_ID',
+            'Recent submissions:\nsubmission_ID',
+            'Comments count:\nfor each sub',
             f'[bold red]{totalsDict["commentsLen"]}[/bold red]',
-            'Submissions count',
+            'Submissions count:\nfor each sub',
             f'[bold red]{totalsDict["submissionsLen"]}[/bold red]',
             totalsDict["dir"],
             'Run Time'
@@ -146,12 +152,18 @@ def printTotals(totalsDict): #Printed stuff after the pushshift log.
     submissionsColumn = '\n'.join([sub[0] for sub in totalsDict['postCounts']['submissions']])
     submissionsCt = '\n'.join([f'[bold red]{sub[1]}[/bold red]' for sub in totalsDict['postCounts']['submissions']])
 
+
+    maxRecentPosts = 100
+    posts = postrun.postRunJson(os.path.join(userDir, 'all_posts.json'), maxRecentPosts)
+
     table.add_row(
+                posts[0],
+                posts[1],
                 f'[purple]{commentsColumn}[/purple]',
                 commentsCt,
                 f'[purple]{submissionsColumn}[/purple]',
                 submissionsCt,
-                '[#f08a05]all_posts.json\nsubreddit_count.txt',
+                '[magenta underline]all_posts.json\nsubreddit_count.txt',
                 f'[magenta underline]{round(totalsDict["end"] - totalsDict["start"], 1)} s'
     )
 
@@ -163,11 +175,8 @@ def printTotals(totalsDict): #Printed stuff after the pushshift log.
 def run(user, options):
     start = time.time()
 
-    usersDir = os.path.join(os.getcwd(), 'users')
-    userDir = os.path.join(usersDir, user)  # Contains files for username.
-    for dir in (usersDir, userDir):
-        if not os.path.exists(dir):
-            os.mkdir(dir)
+    userDir = Path.cwd() / 'users' / user
+    userDir.mkdir(parents=True, exist_ok=True)
 
     print(f'Gathering and formatting data from pushshift for {user}.\n')
 
@@ -176,10 +185,10 @@ def run(user, options):
         keyType = {'submission': ('url', 'created_utc',)}
         images = getPosts(user, keyType, ['submission'])
 
-        images = open( os.path.join(userDir,'images.txt')).read().splitlines()
-        images = set(images)
-        boxedImages = f'[bold blue]Images submitted by {user}\n' + '\n'.join([f'[red]{i+1}\t[magenta]{image}' for i, image in enumerate(images)])
-        console.print(boxedImages)
+        images = set(open(os.path.join(userDir,'images.txt')).read().splitlines())
+        imageStatus = '\n'.join([f'[red]{i+1}\t[magenta]{image}' for i, image in enumerate(images)])
+        imageSubmissionLog = f'[bold blue]Images submitted by {user}\n{imageStatus}'
+        console.print(imageSubmissionLog)
 
         if '-d' in options:
             print()
@@ -199,13 +208,15 @@ def run(user, options):
         totalsDict = {'postCounts': postCounts,
                       'commentsLen': str( len(allPosts['comments']) ),
                       'submissionsLen': str( len(allPosts['submissions']) ),
-                      'dir': userDir,
+                      'dir': str(userDir),
                       'start': start,
                       'end': time.time(),
                       'user':user}
 
-        postrun.shortened(os.path.join(userDir, 'all_posts.json'))
-        printTotals(totalsDict)
+
+        printTotals(totalsDict, userDir)
+
+
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
