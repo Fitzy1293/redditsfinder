@@ -12,7 +12,7 @@ def shortenUrl(postType, postObjectsList, maxPrint): #Shortens URLs and formats 
         pushshiftUrlAttribute = 'permalink'
     else:
         highlight = '[magenta]'
-        pushshiftUrlAttribute = 'url'
+        pushshiftUrlAttribute = 'full_link'
 
     urlsCol = []
     for i, post in enumerate(postObjectsList):
@@ -30,6 +30,7 @@ def shortenUrl(postType, postObjectsList, maxPrint): #Shortens URLs and formats 
             comments = f'[bold green]{repUrl[1]}[/bold green]'
             submissionID = f'[bold red]{repUrl[2]}[/bold red]'
             commentID = f'[bold green]{repUrl[4]}[/bold green]'
+
 
             necessaryInfoToFindPost = [submissionID, commentID]
 
