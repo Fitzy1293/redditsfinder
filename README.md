@@ -32,7 +32,9 @@ That's all there is to setup.
 # Running redditsfinder
 
 ***Arguments***\
+Takes an arbitrary number of users.\
 `redditsfinder 'username'` returns every user post.\
+These are optional args.\
 `redditsfinder -pics 'username'` returns URLs of user's image uploads.\
 `redditsfinder -pics -d 'username'` downloads them.
 
