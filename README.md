@@ -25,6 +25,8 @@ Takes an arbitrary number of usernames, such that there is at least one username
 `-pics` returns URLs of image uploads.\
 `-pics -d` downloads them.\
 `-q` turns off non log related print statements.
+
+# Example terminal table
 ![Imgur Image](https://i.imgur.com/t0hR7Oc.png) 
 
 # Example use of -pics -d
