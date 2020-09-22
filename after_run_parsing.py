@@ -1,4 +1,5 @@
 import json
+import traceback
 from pprint import pprint
 from rich.table import Table,Column
 from rich.console import Console
@@ -11,7 +12,7 @@ def shortenUrl(postType, postObjectsList, maxPrint): #Shortens URLs and formats 
         pushshiftUrlAttribute = 'permalink'
     else:
         highlight = '[magenta]'
-        pushshiftUrlAttribute = 'full_link'
+        pushshiftUrlAttribute = 'url'
 
     urlsCol = []
     for i, post in enumerate(postObjectsList):
@@ -42,9 +43,8 @@ def shortenUrl(postType, postObjectsList, maxPrint): #Shortens URLs and formats 
             consolePrintableStr = '\n'.join(urlsCol)
 
         except Exception as e:
-            print(e)
-            print(post)
-
+            print(traceback.format_exc())
+        
     return consolePrintableStr
 
 def postRunJson(jsonPath, maxPrint):

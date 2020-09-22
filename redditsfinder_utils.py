@@ -1,10 +1,12 @@
 import redditcleaner #Not in standard lib.
 import requests
+import traceback
 import os,sys
 import imghdr
 from zipfile import ZipFile
 import json
-
+from pprint import pprint
+from pathlib import Path
 from rich.table import Table,Column
 from rich.console import Console
 
@@ -63,11 +65,35 @@ def writeFiles(allPosts, postCounts, user, userDir):
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+def imageUrls(user, submissions):
+    urls = [v for i in submissions  for k,v in i.items() if k == 'url']
+    imageUrls = []
+    for url in urls:
+        if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
+            imageUrls.append(url)
+            continue
+
+        if '://reddit.com' in url:
+            continue
+        if 'imgur.com' in url:
+            if '/a/' in url:
+                imageUrls.append(url + '/zip')
+            else:
+                imageUrls.append(url + '.jpg')
+
+    imageUrlsStr = '\n'.join(imageUrls)
+    userDir = Path.cwd() / 'users' / user
+    images = os.path.join(str(userDir), 'images.txt')
+    with open(images, 'w+') as f:
+        f.write(imageUrlsStr+ '\n')
+    return imageUrlsStr
+#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#=============================================================================================================================
+#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def imagesdl(images, userDir): #Needs to deal with all the nonsense involved with image formatting
     console = Console()
     for i, url in enumerate(images):
         try:
-            #if i!= 18: continue
             response = requests.get(url, stream=True)
 
             if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
@@ -82,7 +108,8 @@ def imagesdl(images, userDir): #Needs to deal with all the nonsense involved wit
 
             with open(imagePath, 'wb+') as f:
                 f.write(response.content)
-            dlLog = f'Downloaded {os.path.split(imagePath)[-1]}{" " * 4}{url}'
+
+            dlLog = f'Downloaded: {os.path.split(imagePath)[-1]}\t{url}'
             console.print(f'[green]{dlLog}')
 
             try:
@@ -131,4 +158,4 @@ def imagesdl(images, userDir): #Needs to deal with all the nonsense involved wit
                 console.print(f'[bold blue]{changeExtension}{" " * spaces}{e}')
 
         except Exception as e:
-            console.print(f'[bold red]{i} {url} unexpected exception: {e}')
+            console.print(f'[bold red]{i} {url} unexpected exception: {traceback.format_exc()}')
