@@ -1,4 +1,5 @@
-# redditsfinder 
+# redditsfinder
+**`pip3 install redditsfinder`**\
 **A command line program to easily download reddit users' post histories.** \
 Get any reddit user's entire post history with one command while avoiding the reddit API's 1000 post limit. \
 The main meat of this program is making the requests to pushshift and manipulating pushshift's JSON for a more readable all_posts.json file. \
@@ -12,6 +13,9 @@ Comments and self-posts can be unreadable when put in another format like JSON i
 To deal with it, I gave up and looked online for an alternative. Luckily there was a good one readily available.
 
 # Installation and a sample run
+***With pypi (easiest)***\
+`pip3 install redditsfinder`
+
 ***With git***
 ```
 pip3 install redditcleaner rich
@@ -31,12 +35,12 @@ That's all there is to setup.
 ***Arguments***\
 `python3 -m redditsfinder 'username'` returns every user post.\
 `python3 -m redditsfinder -pics 'username'` returns URLs of user's image uploads.\
-`python3 -m redditsfinder -pics -d 'username` downloads them.
+`python3 -m redditsfinder -pics -d 'username'` downloads them.
 
 ![Imgur Image](https://i.imgur.com/t0hR7Oc.png) 
 
 ## If you installed with pip
-`python3 -m redditsfinder [options] 'username`
+`python3 -m redditsfinder [options] 'username'`
 
 ## If you installed with git
 
