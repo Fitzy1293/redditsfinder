@@ -103,7 +103,7 @@ def getPosts(user, postType): # Pushshift API requests in chunks of 100
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def printTotals(totalsDict): #Prints table after the pushshift log.
+def printTotals(tablesDict): #Prints table after the pushshift log.
     print('\n\n')
     console = Console()
 
@@ -111,29 +111,28 @@ def printTotals(totalsDict): #Prints table after the pushshift log.
             'Recent comments:\nsubmission ID/comment ID',
             'Recent submissions:\nsubmission ID',
             'Comments count:\nfor each sub',
-            f'[bold red]{totalsDict["commentsLen"]}[/bold red]',
+            f'[bold red]{tablesDict["commentsLen"]}[/bold red]',
             'Submissions count:\nfor each sub',
-            f'[bold red]{totalsDict["submissionsLen"]}[/bold red]',
-            totalsDict["dir"],
+            f'[bold red]{tablesDict["submissionsLen"]}[/bold red]',
+            tablesDict["dir"],
             'Run Time'
     ]
 
-    console.log(f'[magenta]{totalsDict["user"]}')
+    console.log(f'[magenta]{tablesDict["user"]}')
 
     table = Table(show_header=True,header_style="bold blue")
 
     for i in header:
         table.add_column(i, justify='left')
 
-    commentsColumn = '\n'.join([sub[0] for sub in totalsDict['postCounts']['comments']])
-    commentsCt = '\n'.join([f'[bold red]{sub[1]}[/bold red]' for sub in totalsDict['postCounts']['comments']])
+    commentsColumn = '\n'.join([sub[0] for sub in tablesDict['postCounts']['comments']])
+    commentsCt = '\n'.join([f'[bold red]{sub[1]}[/bold red]' for sub in tablesDict['postCounts']['comments']])
 
-    submissionsColumn = '\n'.join([sub[0] for sub in totalsDict['postCounts']['submissions']])
-    submissionsCt = '\n'.join([f'[bold red]{sub[1]}[/bold red]' for sub in totalsDict['postCounts']['submissions']])
-
+    submissionsColumn = '\n'.join([sub[0] for sub in tablesDict['postCounts']['submissions']])
+    submissionsCt = '\n'.join([f'[bold red]{sub[1]}[/bold red]' for sub in tablesDict['postCounts']['submissions']])
 
     maxRecentPosts = 50
-    posts = postRunJson(os.path.join(totalsDict['dir'], 'all_posts.json'), maxRecentPosts)
+    posts = postRunJson(os.path.join(tablesDict['dir'], 'all_posts.json'), maxRecentPosts)
 
     table.add_row(
                 posts[0],
@@ -143,7 +142,7 @@ def printTotals(totalsDict): #Prints table after the pushshift log.
                 f'[purple]{submissionsColumn}[/purple]',
                 submissionsCt,
                 '[magenta underline]all_posts.json\nsubreddit_count.txt',
-                f'[magenta underline]{round(totalsDict["end"] - totalsDict["start"], 1)} s'
+                f'[magenta underline]{round(tablesDict["end"] - tablesDict["start"], 1)} s'
     )
 
     console.print(table, justify='left', style='bold white')
@@ -169,15 +168,13 @@ def run(args, user):
         imageSubmissionLog = f'[bold blue]\nImages submitted by {user}\n{imageStatus}'
         console.print(imageSubmissionLog)
 
-        if args['d']:
+        if args['download']:
             print()
             imagesdl(images, userDir)
-
-
-        fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
-        console.print(f'\n[bold cyan]{userDir}{fnamesStr}')
-        console.print(f'\n[bold blue]Run time - {round(time.time() - start, 1)} s\n')
-
+        if not args['quiet']:
+            fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
+            console.print(f'\n[bold cyan]{userDir}{fnamesStr}')
+            console.print(f'\n[bold blue]Run time - {round(time.time() - start, 1)} s\n')
 
     else:
         allPosts = {'comments': [i for i in getPosts(user, 'comment')],
@@ -186,33 +183,29 @@ def run(args, user):
         postCounts = countPosts(allPosts)
         writeFiles(allPosts, postCounts, user, userDir)
 
-        totalsDict = {'postCounts': postCounts,
-                      'commentsLen': str( len(allPosts['comments']) ),
-                      'submissionsLen': str( len(allPosts['submissions']) ),
-                      'dir': str(userDir),
-                      'start': start,
-                      'end': time.time(),
-                      'user':user}
-
-
-        printTotals(totalsDict)
+        if not args['quiet']:
+            tablesDict = {'postCounts': postCounts,
+                          'commentsLen': str( len(allPosts['comments']) ),
+                          'submissionsLen': str( len(allPosts['submissions']) ),
+                          'dir': str(userDir),
+                          'start': start,
+                          'end': time.time(),
+                          'user':user}
+            printTotals(tablesDict)
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def main():  # System arguments. CHANGE TO ARGPARSER
-
+def main():  # System arguments
     parser = argparse.ArgumentParser()
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-pics', action='store_true', dest='pics')
-    parser.add_argument('-d', action='store_true', dest='d')
+    parser.add_argument('-pics', action='store_true', dest='pics', help='Returns image urls in users/user/images.txt')
+    parser.add_argument('-d', '--download',action='store_true', dest='download', help='Downloads pics from images.txt')
+    parser.add_argument('-q,' '--quiet', action='store_true', dest='quiet', help='Silences non log related outputs')
     parser.add_argument(' ', action='append', type=str, nargs='+')
 
     if len(sys.argv) == 1:
-        print('Remember to add a username')
+        print('Remember to add at least 1 username')
+        print('Try redditsfinder -h for help')
 
-    else:
-        args = vars(parser.parse_args())
-        for user in args[' '][0]:
-            run(args, user)
-
+    usableArgs = vars(parser.parse_args())
+    for user in usableArgs[' '][0]:
+        run(usableArgs, user)
