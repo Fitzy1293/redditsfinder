@@ -45,5 +45,5 @@ That's all there is to setup.
 ![Imgur Image](https://i.imgur.com/yHR87rG.png)
 
 # Example use of -pics -d
-![Imgur Image](https://i.imgur.com/8MMLhMD.png)
+![Imgur Image](https://i.imgur.com/1bMuKlV.png)
 
