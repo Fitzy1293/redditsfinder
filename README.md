@@ -12,50 +12,25 @@ https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a m
 Comments and self-posts can be unreadable when put in another format like JSON if they have a fair amount of formatting. \
 To deal with it, I gave up and looked online for an alternative. Luckily there was a good one readily available.
 
-# Installation and a sample run
+# Installation
 `pip3 install redditsfinder`
-
-***Or with git***
-```
-pip3 install redditcleaner rich
-git clone https://github.com/Fitzy1293/redditsfinder.git
-cd redditsfinder
-```
-Now test if it works. 
-
-```
-python3 redditsfinder.py 'yourUsername'
-```
-That's all there is to setup. 
-
 
 # Running redditsfinder
 
 ***Arguments***\
-Takes an arbitrary number of users.\
-`redditsfinder 'username'` returns every user post.\
-These are optional args.\
-`redditsfinder -pics 'username'` returns URLs of user's image uploads.\
-`redditsfinder -pics -d 'username'` downloads them.
-
+Takes an arbitrary number of usernames, such that there is at least one username.\
+`redditsfinder [options] username_0 username_1 username_2 ...`\
+`redditsfinder username` returns every post to a JSON file and formats a table in the terminal for a quick view.\
+***Optional args***\
+`-pics` returns URLs of image uploads.\
+`-pics -d` downloads them.\
+`-q` turns off non log related print statements.
 ![Imgur Image](https://i.imgur.com/t0hR7Oc.png) 
 
-## If you installed with pip
-`redditsfinder [options] 'username'`
-
-## If you installed with git
-
-***In the directory where you installed redditsfinder.py***\
-`python3 redditsfinder.py [options] 'username'` 
-
-***If you made it executable***\
-`./redditsfinder.py [options] 'username'` 
-
-
+# Example use of -pics -d
+![Imgur Image](https://i.imgur.com/1bMuKlV.png)
 
 # Example JSON object
 ![Imgur Image](https://i.imgur.com/yHR87rG.png)
 
-# Example use of -pics -d
-![Imgur Image](https://i.imgur.com/1bMuKlV.png)
 
