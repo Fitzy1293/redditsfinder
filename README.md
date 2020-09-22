@@ -12,7 +12,7 @@ Comments and self-posts can be unreadable when put in another format like JSON i
 To deal with it, I gave up and looked online for an alternative. Luckily there was a good one readily available.
 
 # Installation and a sample run
-***With git (easiest method)***
+***With git***
 ```
 pip3 install redditcleaner rich
 git clone https://github.com/Fitzy1293/redditsfinder.git
@@ -28,18 +28,25 @@ That's all there is to setup.
 
 # Running redditsfinder
 
+***Arguments***\
+`python3 -m redditsfinder 'username'` returns every user post.\
+`python3 -m redditsfinder -pics 'username'` returns URLs of user's image uploads.\
+`python3 -m redditsfinder -pics -d 'username` downloads them.
+
 ![Imgur Image](https://i.imgur.com/t0hR7Oc.png) 
 
+## If you installed with pip
+`python3 -m redditsfinder [options] 'username`
+
+## If you installed with git
+
 ***In the directory where you installed redditsfinder.py***\
-`python3 redditsfinder.py [options] redditUsername` 
+`python3 redditsfinder.py [options] 'username'` 
 
 ***If you made it executable***\
-`./redditsfinder.py [options] redditUsername` 
+`./redditsfinder.py [options] 'username'` 
 
-***Arguments***\
-`redditsfinder.py redditUsername` returns every user post.\
-`-pics` returns URLs of user's image uploads.\
-`-pics -d` downloads them.
+
 
 # Example JSON object
 ![Imgur Image](https://i.imgur.com/yHR87rG.png)
