@@ -13,10 +13,9 @@ Comments and self-posts can be unreadable when put in another format like JSON i
 To deal with it, I gave up and looked online for an alternative. Luckily there was a good one readily available.
 
 # Installation and a sample run
-***With pypi (easiest)***
 `pip3 install redditsfinder`
 
-***With git***
+***Or with git***
 ```
 pip3 install redditcleaner rich
 git clone https://github.com/Fitzy1293/redditsfinder.git
