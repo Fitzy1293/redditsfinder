@@ -20,12 +20,14 @@ from pprint import pprint
 from urllib.error import HTTPError
 from datetime import datetime
 from pathlib import Path
+import argparse
+
 
 from rich.table import Table,Column
 from rich.console import Console
 
-from .redditsfinder_utils import *
-from .after_run_parsing import *
+from redditsfinder_utils import *
+from after_run_parsing import *
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -149,7 +151,7 @@ def printTotals(totalsDict): #Prints table after the pushshift log.
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def run(user, options):
+def run(args, user):
     start = time.time()
     console = Console()
 
@@ -158,7 +160,7 @@ def run(user, options):
 
     console.print(f'[bold blue]\nGathering and formatting data from pushshift for {user}.\n')
 
-    if '-pics' in options:
+    if  args['pics']:
         keyType = {'submission': ('url', 'created_utc',)}
         images = imageUrls(user, [i for i in getPosts(user, 'submission')])
 
@@ -167,7 +169,7 @@ def run(user, options):
         imageSubmissionLog = f'[bold blue]\nImages submitted by {user}\n{imageStatus}'
         console.print(imageSubmissionLog)
 
-        if '-d' in options:
+        if args['d']:
             print()
             imagesdl(images, userDir)
 
@@ -198,18 +200,20 @@ def run(user, options):
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def main():  # System arguments. CHANGE TO ARGPARSER
+
+    parser = argparse.ArgumentParser()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-pics', action='store_true', dest='pics')
+    parser.add_argument('-d', action='store_true', dest='d')
+    parser.add_argument(' ', action='append', type=str, nargs='+')
+
     if len(sys.argv) == 1:
         print('Remember to add a username')
-        print('For help enter redditsfinder -h')
 
-    elif len(sys.argv) == 2:
+    else:
+        args = vars(parser.parse_args())
+        for user in args[' '][0]:
+            run(args, user)
 
-        if sys.argv[-1] == '-h':
-            print('Only argument is a username')
-            print('Adding more options soon')
-        else:
-            run(sys.argv[-1], [''])
-
-    elif len(sys.argv) >= 3:
-        optArgs = [arg for arg in sys.argv[1:-1]]
-        run(sys.argv[-1], optArgs)
+main()
