@@ -128,7 +128,7 @@ def printTotals(totalsDict): #Prints table after the pushshift log.
     submissionsCt = '\n'.join([f'[bold red]{sub[1]}[/bold red]' for sub in totalsDict['postCounts']['submissions']])
 
 
-    maxRecentPosts = 4
+    maxRecentPosts = 10
     posts = postrun.postRunJson(os.path.join(totalsDict['dir'], 'all_posts.json'), maxRecentPosts)
 
     table.add_row(
