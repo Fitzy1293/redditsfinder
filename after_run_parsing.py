@@ -44,7 +44,7 @@ def shortenUrl(postType, postObjectsList, maxPrint): #Shortens URLs and formats 
 
         except Exception as e:
             print(traceback.format_exc())
-        
+
     return consolePrintableStr
 
 def postRunJson(jsonPath, maxPrint):
