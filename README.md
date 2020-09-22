@@ -34,10 +34,10 @@ That's all there is to setup.
 `python3 redditsfinder.py [options] redditUsername` 
 
 ***If you made it executable***\
-`./redditsfinder [options] redditUsername` 
+`./redditsfinder.py [options] redditUsername` 
 
 ***Arguments***\
-`redditsfinder redditUsername` returns every user post.\
+`redditsfinder.py redditUsername` returns every user post.\
 `-pics` returns URLs of user's image uploads.\
 `-pics -d` downloads them.
 
