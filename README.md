@@ -33,14 +33,14 @@ That's all there is to setup.
 # Running redditsfinder
 
 ***Arguments***\
-`python3 -m redditsfinder 'username'` returns every user post.\
-`python3 -m redditsfinder -pics 'username'` returns URLs of user's image uploads.\
-`python3 -m redditsfinder -pics -d 'username'` downloads them.
+`redditsfinder 'username'` returns every user post.\
+`redditsfinder -pics 'username'` returns URLs of user's image uploads.\
+`redditsfinder -pics -d 'username'` downloads them.
 
 ![Imgur Image](https://i.imgur.com/t0hR7Oc.png) 
 
 ## If you installed with pip
-`python3 -m redditsfinder [options] 'username'`
+`redditsfinder [options] 'username'`
 
 ## If you installed with git
 
