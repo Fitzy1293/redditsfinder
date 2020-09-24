@@ -10,7 +10,9 @@ The colored terminal features and markup are from https://github.com/willmcgugan
 
 https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a massive help for dealing with reddit's strange markup. \
 Comments and self-posts can be unreadable when put in another format like JSON if they have a fair amount of formatting. \
-To deal with it, I gave up and looked online for an alternative. Luckily there was a good one readily available.
+To deal with it, I gave up and looked online for an alternative. Luckily there was a good one readily available. \
+
+I wrote an article with some explanations of the code here - http://redditsfinder.com/.
 
 # Installation
 `pip3 install redditsfinder`
