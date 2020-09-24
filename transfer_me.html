@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+
+<head>
+  <link rel="stylesheet" href="./styles.css">
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>README</title>
+</head>
+
+<body>
+
+  <div class="my-text">
+    <h1>redditsfinder explanation</h2>
+    <h2>Introduction</h2>
+    <p>
+      I wanted a way to get an overview of a redditor in a simple to use command line program.</br>
+      I had been messing around with the reddit API with the PRAW python wrapper. PRAW is very easy to use but is still limited by reddit's 1000 post hard limit on the number of posts you can get at a time. Posts are broken down into either comments
+      or submissions.</br>
+      The pushshift API doesn't have this limit, meaning you can get much more complete datasets. I originally wanted to rank peoples most posted in subreddits, so it helped to have every post.</br>
+      That being said, pushshift limits limits the number of posts you can get for a user to 100 in one API request. You also have to wait 1 second between requests or there is a rate limit. It used to be 1000, and because of the fact that you will
+      get rate limited for making requests too quick making it asynchronous won't help.</br>
+      How you go about getting every post is taking the "utc_created" field every post has, for the last post in that API call. You then use that utc timestamp to say you want to get all posts before then. This is put in a while loop that breaks when
+      it gets back less than 100 posts from pushshift, which means there will be no more posts after that for that post type.</br>
+      That's all there is to gathering the data.
+    </p>
+  </div>
+
+
+
+
+
+
+
+
+  <div class="highlight" style="background: #272822">
+    <pre style="line-height: 125%; margin: 0;"><span></span><span style="color: #66d9ef">def</span> <span style="color: #a6e22e">getPosts</span><span style="color: #f8f8f2">(user,</span> <span style="color: #f8f8f2">postType):</span> <span style="color: #75715e"># Pushshift API requests in chunks of 100</span>
+    <span style="color: #f8f8f2">console</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Console()</span>
+    <span style="color: #f8f8f2">console</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">print(</span><span style="color: #e6db74">f'[bold blue]{</span><span style="color: #f8f8f2">postType[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">upper()</span><span style="color: #e6db74">}{</span><span style="color: #f8f8f2">postType[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:]</span><span style="color: #e6db74">} request log:'</span><span style="color: #f8f8f2">)</span>
+
+    <span style="color: #f8f8f2">apiUrl</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">'https://api.pushshift.io/reddit/search/'</span>
+    <span style="color: #f8f8f2">postSetMaxLen</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">100</span> <span style="color: #75715e"># Max num of posts in each pushshift request, seems to be 100 right now or it breaks.</span>
+
+    <span style="color: #f8f8f2">before</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">int(round(time</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">time()))</span>
+    <span style="color: #f8f8f2">beginTime</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">before</span>
+    <span style="color: #f8f8f2">allPosts</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{}</span>
+
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">postType</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">'comment'</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #f8f8f2">highlight</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">'[cyan]'</span>
+    <span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #f8f8f2">highlight</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">'[magenta]'</span>
+
+    <span style="color: #f8f8f2">ct,</span> <span style="color: #f8f8f2">testCt</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">0</span>
+
+    <span style="color: #f8f8f2">posts</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+    <span style="color: #66d9ef">while</span> <span style="color: #66d9ef">True</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #f8f8f2">time</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sleep(</span><span style="color: #f92672">.</span><span style="color: #ae81ff">75</span><span style="color: #f8f8f2">)</span>
+        <span style="color: #f8f8f2">url</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">f'{</span><span style="color: #f8f8f2">apiUrl</span><span style="color: #e6db74">}{</span><span style="color: #f8f8f2">postType</span><span style="color: #e6db74">}/?author={</span><span style="color: #f8f8f2">user</span><span style="color: #e6db74">}&amp;size={</span><span style="color: #f8f8f2">postSetMaxLen</span><span style="color: #e6db74">}&amp;before={</span><span style="color: #f8f8f2">before</span><span style="color: #e6db74">}'</span>
+
+        <span style="color: #f8f8f2">response</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">requests</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get(apiUrl</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">postType,</span> <span style="color: #f8f8f2">params</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">{</span><span style="color: #e6db74">'author'</span><span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">user,</span> <span style="color: #e6db74">'size'</span><span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">postSetMaxLen,</span> <span style="color: #e6db74">'before'</span><span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">before})</span>
+        <span style="color: #f8f8f2">data</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">response</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">json()[</span><span style="color: #e6db74">'data'</span><span style="color: #f8f8f2">]</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">data:</span>
+            <span style="color: #66d9ef">break</span>
+
+        <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">postData</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">data:</span>
+            <span style="color: #f8f8f2">before</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">postData[</span><span style="color: #e6db74">'created_utc'</span><span style="color: #f8f8f2">]</span>
+            <span style="color: #66d9ef">yield</span> <span style="color: #f8f8f2">cleanupPostData(postData,</span> <span style="color: #f8f8f2">postType)</span>
+
+        <span style="color: #75715e">#testCt+=1 #For testing.</span>
+        <span style="color: #75715e">#if testCt&gt;1: break</span>
+
+        <span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">ct</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">len(data)</span>
+        <span style="color: #f8f8f2">console</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">print(</span><span style="color: #e6db74">f'[red]</span><span style="color: #ae81ff">\t</span><span style="color: #e6db74">{</span><span style="color: #f8f8f2">ct</span><span style="color: #e6db74">} {</span><span style="color: #f8f8f2">highlight</span><span style="color: #e6db74">}{</span><span style="color: #f8f8f2">url</span><span style="color: #e6db74">}'</span><span style="color: #f8f8f2">)</span>
+
+        <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(data)</span> <span style="color: #f92672">&lt;</span> <span style="color: #f8f8f2">postSetMaxLen:</span>
+            <span style="color: #66d9ef">break</span>
+</pre>
+  </div>
+
+
+</body>
+
+
+
+
+
+
+
+</html>
