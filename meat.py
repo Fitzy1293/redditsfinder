@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 
 '''
-github.com/fitzy1293/redditsfinder
-TO DO:
-    - REFACTOR getPosts. Name it something more appropriate relating to the fact that it gets the pushshift data.
-        #Done
-    - Implement argparse instead of doing sys.argv[] conditions. Just learned about it and it is clearly much better.
-        - Easily can do things like allow arbitrary numbers of users to be entered in one command.
+              _     _ _ _        __ _           _
+ _ __ ___  __| | __| (_) |_ ___ / _(_)_ __   __| | ___ _ __
+| '__/ _ \/ _` |/ _` | | __/ __| |_| | '_ \ / _` |/ _ \ '__|
+| | |  __/ (_| | (_| | | |_\__ \  _| | | | | (_| |  __/ |
+|_|  \___|\__,_|\__,_|_|\__|___/_| |_|_| |_|\__,_|\___|_|
 
+
+github.com/fitzy1293/redditsfinder
+
+
+TO DO:
+    - Add more optional args.
+    - Instead of using a set to identify pictures:
+        - name_com_extension
+            -What if invalid extension?
 '''
 
 import urllib.request
