@@ -70,7 +70,7 @@ def cleanupPostData(postData, postType): #Thanks /u/kwelzel for helping me refac
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def getPosts(user, postType): # Pushshift API requests in chunks of 100
     console = Console()
-    console.print(f'[bold blue]{postType[0].upper()}{postType[1:]} request log:')
+    console.print(f'[bold blue underline]{postType[0].upper()}{postType[1:]} request log:')
 
     apiUrl = 'https://api.pushshift.io/reddit/search/'
     postSetMaxLen = 100 # Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
@@ -84,7 +84,7 @@ def getPosts(user, postType): # Pushshift API requests in chunks of 100
     else:
         highlight = '[magenta]'
 
-    ct, testCt = 0, 0
+    ct = 0
 
     posts = []
     while True:
@@ -100,11 +100,8 @@ def getPosts(user, postType): # Pushshift API requests in chunks of 100
             before = postData['created_utc']
             yield cleanupPostData(postData, postType)
 
-        #testCt+=1 #For testing.
-        #if testCt>1: break
-
         ct = ct + len(data)
-        console.print(f'[red]\t{ct} {highlight}{url}')
+        console.print(f'[bold green]\t{ct} {highlight}{url}')
 
         if len(data) < postSetMaxLen:
             break
@@ -172,17 +169,13 @@ def run(args, user):
         images = imageUrls(user, [i for i in getPosts(user, 'submission')])
 
         images = set(open(os.path.join(userDir,'images.txt')).read().splitlines())
-        imageStatus = '\n'.join([f'[red]{i+1}\t[magenta]{image}' for i, image in enumerate(images)])
-        imageSubmissionLog = f'[bold blue]\nImages submitted by {user}\n{imageStatus}'
+        imageStatus = '\n'.join([f'\t[bold green]{i+1} [cyan]{image}' for i, image in enumerate(images)])
+        imageSubmissionLog = f'[bold blue underline]\nImages submitted by {user}:[/bold blue underline]\n{imageStatus}'
         console.print(imageSubmissionLog)
 
         if args['download']:
             print()
             imagesdl(images, userDir)
-        if not args['quiet']:
-            fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
-            console.print(f'\n[bold cyan]{userDir}{fnamesStr}')
-            console.print(f'\n[bold blue]Run time - {round(time.time() - start, 1)} s\n')
 
     else:
         allPosts = {'comments': [i for i in getPosts(user, 'comment')],
@@ -200,6 +193,11 @@ def run(args, user):
                           'end': time.time(),
                           'user':user}
             printTotals(tablesDict)
+
+    if not args['quiet']:
+        fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
+        console.print(f'\n[bold cyan underline]{userDir}{fnamesStr}')
+        console.print(f'\n[bold blue]Run time - {round(time.time() - start, 1)} s\n')
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -215,7 +213,6 @@ def main():  # System arguments
         print('Try redditsfinder -h for help')
 
     usableArgs = vars(parser.parse_args())
-    pprint(usableArgs)
     for user in usableArgs[' '][0]:
         run(usableArgs, user)
 
