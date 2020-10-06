@@ -109,7 +109,7 @@ def imagesdl(images, userDir): #Needs to deal with all the nonsense involved wit
             with open(imagePath, 'wb+') as f:
                 f.write(response.content)
 
-            dlLog = f'Downloaded: {os.path.split(imagePath)[-1]}\t{url}'
+            dlLog = f'\t{os.path.split(imagePath)[-1]} - Downloaded: {url}'
             console.print(f'[green]{dlLog}')
 
             try:

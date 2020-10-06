@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 
 '''
-github.com/fitzy1293/redditsfinder
-TO DO:
-    - REFACTOR getPosts. Name it something more appropriate relating to the fact that it gets the pushshift data.
-        #Done
-    - Implement argparse instead of doing sys.argv[] conditions. Just learned about it and it is clearly much better.
-        - Easily can do things like allow arbitrary numbers of users to be entered in one command.
+              _     _ _ _        __ _           _
+ _ __ ___  __| | __| (_) |_ ___ / _(_)_ __   __| | ___ _ __
+| '__/ _ \/ _` |/ _` | | __/ __| |_| | '_ \ / _` |/ _ \ '__|
+| | |  __/ (_| | (_| | | |_\__ \  _| | | | | (_| |  __/ |
+|_|  \___|\__,_|\__,_|_|\__|___/_| |_|_| |_|\__,_|\___|_|
 
+
+github.com/fitzy1293/redditsfinder
+
+
+TO DO:
+    - Add more optional args.
+    - Instead of using a set to identify pictures:
+        - name_com_extension
+            -What if invalid extension?
 '''
 
 import urllib.request
@@ -62,7 +70,7 @@ def cleanupPostData(postData, postType): #Thanks /u/kwelzel for helping me refac
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def getPosts(user, postType): # Pushshift API requests in chunks of 100
     console = Console()
-    console.print(f'[bold blue]{postType[0].upper()}{postType[1:]} request log:')
+    console.print(f'[bold blue underline]{postType[0].upper()}{postType[1:]} request log:')
 
     apiUrl = 'https://api.pushshift.io/reddit/search/'
     postSetMaxLen = 100 # Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
@@ -76,7 +84,7 @@ def getPosts(user, postType): # Pushshift API requests in chunks of 100
     else:
         highlight = '[magenta]'
 
-    ct, testCt = 0, 0
+    ct = 0
 
     posts = []
     while True:
@@ -92,11 +100,8 @@ def getPosts(user, postType): # Pushshift API requests in chunks of 100
             before = postData['created_utc']
             yield cleanupPostData(postData, postType)
 
-        #testCt+=1 #For testing.
-        #if testCt>1: break
-
         ct = ct + len(data)
-        console.print(f'[red]\t{ct} {highlight}{url}')
+        console.print(f'[bold green]\t{ct} {highlight}{url}')
 
         if len(data) < postSetMaxLen:
             break
@@ -164,17 +169,13 @@ def run(args, user):
         images = imageUrls(user, [i for i in getPosts(user, 'submission')])
 
         images = set(open(os.path.join(userDir,'images.txt')).read().splitlines())
-        imageStatus = '\n'.join([f'[red]{i+1}\t[magenta]{image}' for i, image in enumerate(images)])
-        imageSubmissionLog = f'[bold blue]\nImages submitted by {user}\n{imageStatus}'
+        imageStatus = '\n'.join([f'\t[bold green]{i+1} [cyan]{image}' for i, image in enumerate(images)])
+        imageSubmissionLog = f'[bold blue underline]\nImages submitted by {user}:[/bold blue underline]\n{imageStatus}'
         console.print(imageSubmissionLog)
 
         if args['download']:
             print()
             imagesdl(images, userDir)
-        if not args['quiet']:
-            fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
-            console.print(f'\n[bold cyan]{userDir}{fnamesStr}')
-            console.print(f'\n[bold blue]Run time - {round(time.time() - start, 1)} s\n')
 
     else:
         allPosts = {'comments': [i for i in getPosts(user, 'comment')],
@@ -192,6 +193,11 @@ def run(args, user):
                           'end': time.time(),
                           'user':user}
             printTotals(tablesDict)
+
+    if not args['quiet']:
+        fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
+        console.print(f'\n[bold cyan underline]{userDir}{fnamesStr}')
+        console.print(f'\n[bold blue]Run time - {round(time.time() - start, 1)} s\n')
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
