@@ -33,7 +33,7 @@ def humanReadablePost(redditRawText): # Makes body and selftext not an abominati
 def countPosts(allPosts):  # Count and order most posted subs.
     postCounts = {}
     for postType, posts in allPosts.items():
-        subreddits = [post['subreddit'] for post in posts]
+        subreddits = [post['subreddit'] for post in posts if 'subreddit' in post.keys()]
         subredditSet = set(subreddits)
 
         counts = []

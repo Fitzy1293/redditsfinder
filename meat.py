@@ -193,7 +193,6 @@ def run(args, user):
     else:
         allPosts = {'comments': [i for i in getPosts(user, 'comment')],
                     'submissions': [i for i in getPosts(user, 'submission')]}
-
         postCounts = countPosts(allPosts)
         writeFiles(allPosts, postCounts, user, userDir)
 
@@ -206,6 +205,7 @@ def run(args, user):
                           'end': time.time(),
                           'user': user}
             printTotals(tablesDict)
+
 
     if not '-q' in args and not '--quiet' in args:
         fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
