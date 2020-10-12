@@ -27,13 +27,13 @@ To deal with it, I gave up and looked online for an alternative. Luckily there w
 `redditsfinder [options] username_0 username_1 username_2 ...`\
 \
 Returns every post to a different JSON file for each user and formats a table in the terminal for a quick view.\
-Takes an arbitrary number of usernames, such that there is at least one user name.\
+Takes an arbitrary number of user names, such that there is at least one user name.\
 
 ***With a file***\
 `-f` or `--file`\
 `redditsfinder [options] -f line_separated_text_file.txt`\
 \
-Uses the user name arguments from a file.
+Uses user names from a file.
 
 
 ***Optional args***\
