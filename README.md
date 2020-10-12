@@ -29,7 +29,6 @@ To deal with it, I gave up and looked online for an alternative. Luckily there w
 Takes an arbitrary number of user names, such that there is at least one user name.**\
 \
 `redditsfinder username`\
-\
 `redditsfinder [options] username_0 username_1 username_2 ...`
 
 
