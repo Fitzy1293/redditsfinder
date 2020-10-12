@@ -113,14 +113,15 @@ def printTotals(tablesDict): #Prints table after the pushshift log.
     console = Console()
 
     header = [
-            'Recent comments:\nsubmission ID/comment ID',
+            '',
+            'Recent comments:\nsubmission ID\ncomment ID',
             'Recent submissions:\nsubmission ID',
             'Comments count:\nfor each sub',
             f'[bold red]{tablesDict["commentsLen"]}[/bold red]',
             'Submissions count:\nfor each sub',
-            f'[bold red]{tablesDict["submissionsLen"]}[/bold red]',
-            tablesDict["dir"],
-            'Run Time'
+            f'[bold red]{tablesDict["submissionsLen"]}[/bold red]'#,
+            #tablesDict["dir"],
+            #'Run Time'
     ]
 
     console.log(f'[magenta]{tablesDict["user"]}')
@@ -139,18 +140,30 @@ def printTotals(tablesDict): #Prints table after the pushshift log.
     maxRecentPosts = 50
     posts = postRunJson(os.path.join(tablesDict['dir'], 'all_posts.json'), maxRecentPosts)
 
+    #Numbers the columns
+    columnLengths = max (i.count('\n') for i in [posts[0],posts[1], commentsColumn, submissionsColumn]) + 1
+    columnNums = '\n'.join([str(i) for i in range(columnLengths)])
+    print(columnLengths)
+
+
+    rows = [
+            columnNums,
+            posts[0],
+            posts[1],
+            f'[purple]{commentsColumn}[/purple]',
+            commentsCt,
+            f'[purple]{submissionsColumn}[/purple]',
+            submissionsCt,
+            '[magenta underline]all_posts.json\nsubreddit_count.txt',
+            f'[magenta underline]{round(tablesDict["end"] - tablesDict["start"], 1)} s'
+    ]
+
+
     table.add_row(
-                posts[0],
-                posts[1],
-                f'[purple]{commentsColumn}[/purple]',
-                commentsCt,
-                f'[purple]{submissionsColumn}[/purple]',
-                submissionsCt,
-                '[magenta underline]all_posts.json\nsubreddit_count.txt',
-                f'[magenta underline]{round(tablesDict["end"] - tablesDict["start"], 1)} s'
+    rows[0], rows[1], rows[2], rows[3], rows[4], rows[5], rows[6]#, rows[7], rows[8]
     )
 
-    console.print(table, justify='left', style='bold white')
+    console.print(table, justify='center', style='bold white')
     print()
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
@@ -186,12 +199,12 @@ def run(args, user):
 
         if not '-q' in args and not '--quiet' in args:
             tablesDict = {'postCounts': postCounts,
-                          'commentsLen': str( len(allPosts['comments']) ),
-                          'submissionsLen': str( len(allPosts['submissions']) ),
+                          'commentsLen': str(len(allPosts['comments'])),
+                          'submissionsLen': str(len(allPosts['submissions'])),
                           'dir': str(userDir),
                           'start': start,
                           'end': time.time(),
-                          'user':user}
+                          'user': user}
             printTotals(tablesDict)
 
     if not '-q' in args and not '--quiet' in args:
@@ -202,18 +215,14 @@ def run(args, user):
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def main():  # System arguments
-    #SOME REDDIT ACCOUNTS HAVE "-" at the beginning of their usernames.
-    #WHY?????? IT RUINS ARGSPARSE. TRIED TESTING WITH A LIST OF MANY USERNAMES AND FAILED.
-
     redditsfinderArgs = sys.argv[1:]
-    optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet', '-f')
+    optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet', '-f', '--file')
     enteredOptionalArgs = [i for i in redditsfinderArgs if i in optionalArgs]
 
     if '-f' in enteredOptionalArgs:
         usernames = open(sys.argv[-1]).read().splitlines()
     else:
         usernames = [i for i in redditsfinderArgs if i not in optionalArgs]
-
 
     print(f'Optional arguments: {enteredOptionalArgs}')
     print('Usernames: '), pprint(usernames)

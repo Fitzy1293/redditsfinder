@@ -215,20 +215,45 @@ def run(args, user):
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def main():  # System arguments
-    redditsfinderArgs = sys.argv[1:]
-    optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet', '-f', '--file')
-    enteredOptionalArgs = [i for i in redditsfinderArgs if i in optionalArgs]
 
-    if '-f' in enteredOptionalArgs:
-        usernames = open(sys.argv[-1]).read().splitlines()
+    if len(sys.argv) == 1:
+        print('''Running redditsfinder
+
+        Test it on yourself to make sure it works.
+
+        redditsfinder yourusername
+
+        Basic usage
+
+        redditsfinder username
+        redditsfinder [options] username_0 username_1 username_2 ...
+
+        With a file
+
+        -f or --file
+        redditsfinder [options] -f line_separated_text_file.txt
+
+        Optional args
+
+        -pics returns URLs of image uploads.
+        -pics -d or -pics --download downloads them.
+        -q or --quiet turns off non log related print statements.''' )
+
+
     else:
-        usernames = [i for i in redditsfinderArgs if i not in optionalArgs]
+        redditsfinderArgs = sys.argv[1:]
+        optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet', '-f', '--file')
+        enteredOptionalArgs = [i for i in redditsfinderArgs if i in optionalArgs]
 
-    print(f'Optional arguments: {enteredOptionalArgs}')
-    print('Usernames: '), pprint(usernames)
+        if '-f' in enteredOptionalArgs:
+            usernames = open(sys.argv[-1]).read().splitlines()
+        else:
+            usernames = [i for i in redditsfinderArgs if i not in optionalArgs]
 
-    for user in usernames:
-        run(enteredOptionalArgs, user)
+        print(f'Optional arguments: {enteredOptionalArgs}')
+        print('Usernames: '), pprint(usernames)
 
+        for user in usernames:
+            run(enteredOptionalArgs, user)
 
 main()
