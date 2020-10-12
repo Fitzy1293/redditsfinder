@@ -206,9 +206,13 @@ def main():  # System arguments
     #WHY?????? IT RUINS ARGSPARSE. TRIED TESTING WITH A LIST OF MANY USERNAMES AND FAILED.
 
     redditsfinderArgs = sys.argv[1:]
-    optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet')
+    optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet', '-f')
     enteredOptionalArgs = [i for i in redditsfinderArgs if i in optionalArgs]
-    usernames = [i for i in redditsfinderArgs if i not in optionalArgs]
+
+    if '-f' in enteredOptionalArgs:
+        usernames = open(sys.argv[-1]).read().splitlines()
+    else:
+        usernames = [i for i in redditsfinderArgs if i not in optionalArgs]
 
 
     print(f'Optional arguments: {enteredOptionalArgs}')
