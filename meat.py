@@ -164,7 +164,7 @@ def run(args, user):
 
     console.print(f'[bold blue]\nGathering and formatting data from pushshift for {user}.\n')
 
-    if  args['pics']:
+    if  '-pics' in args:
         keyType = {'submission': ('url', 'created_utc',)}
         images = imageUrls(user, [i for i in getPosts(user, 'submission')])
 
@@ -173,7 +173,7 @@ def run(args, user):
         imageSubmissionLog = f'[bold blue underline]\nImages submitted by {user}:[/bold blue underline]\n{imageStatus}'
         console.print(imageSubmissionLog)
 
-        if args['download']:
+        if not '-d' in args and not '--download' in args:
             print()
             imagesdl(images, userDir)
 
@@ -184,7 +184,7 @@ def run(args, user):
         postCounts = countPosts(allPosts)
         writeFiles(allPosts, postCounts, user, userDir)
 
-        if not args['quiet']:
+        if not '-q' in args and not '--quiet' in args:
             tablesDict = {'postCounts': postCounts,
                           'commentsLen': str( len(allPosts['comments']) ),
                           'submissionsLen': str( len(allPosts['submissions']) ),
@@ -194,7 +194,7 @@ def run(args, user):
                           'user':user}
             printTotals(tablesDict)
 
-    if not args['quiet']:
+    if not '-q' in args and not '--quiet' in args:
         fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
         console.print(f'\n[bold cyan underline]{userDir}{fnamesStr}')
         console.print(f'\n[bold blue]Run time - {round(time.time() - start, 1)} s\n')
@@ -202,18 +202,20 @@ def run(args, user):
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def main():  # System arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-pics', action='store_true', dest='pics', help='Returns image urls in users/user/images.txt')
-    parser.add_argument('-d', '--download',action='store_true', dest='download', help='Downloads pics from images.txt')
-    parser.add_argument('-q,' '--quiet', action='store_true', dest='quiet', help='Silences non log related outputs')
-    parser.add_argument(' ', action='append', type=str, nargs='+')
+    #SOME REDDIT ACCOUNTS HAVE "-" at the beginning of their usernames.
+    #WHY?????? IT RUINS ARGSPARSE. TRIED TESTING WITH A LIST OF MANY USERNAMES AND FAILED.
 
-    if len(sys.argv) == 1:
-        print('Remember to add at least 1 username')
-        print('Try redditsfinder -h for help')
+    redditsfinderArgs = sys.argv[1:]
+    optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet')
+    enteredOptionalArgs = [i for i in redditsfinderArgs if i in optionalArgs]
+    usernames = [i for i in redditsfinderArgs if i not in optionalArgs]
 
-    usableArgs = vars(parser.parse_args())
-    for user in usableArgs[' '][0]:
-        run(usableArgs, user)
+
+    print(f'Optional arguments: {enteredOptionalArgs}')
+    print('Usernames: '), pprint(usernames)
+
+    for user in usernames:
+        run(enteredOptionalArgs, user)
+
 
 main()
