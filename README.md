@@ -1,6 +1,7 @@
 # redditsfinder
-**`pip3 install redditsfinder`**\
-**A command line program to easily download reddit users' post histories.** 
+**`pip3 install redditsfinder`**
+
+**A command line program to easily download reddit users' post histories.**
 
 Get any reddit user's entire post history with one command while avoiding the reddit API's 1000 post limit. \
 The main meat of this program is making the requests to pushshift and manipulating pushshift's JSON for a more readable all_posts.json file. \
