@@ -49,12 +49,11 @@ Takes an arbitrary number of user names, such that there is at least one user na
 `-pics -d` or `-pics --download` downloads them.\
 `-q` or `--quiet` turns off non log related print statements.
 
+# Example Pushshift request log
+![Imgur Image](https://imgur.com/VJDzFAh.png)
 
 # Example terminal table
-![Imgur Image](https://i.imgur.com/t0hR7Oc.png)
-
-# Example use of -pics -d
-![Imgur Image](https://i.imgur.com/1bMuKlV.png)
+![Imgur Image](https://imgur.com/ZncrWFX.png)
 
 # Example JSON object
-![Imgur Image](https://i.imgur.com/yHR87rG.png)
+![Imgur Image](https://imgur.com/SfoDXHQ.png)
