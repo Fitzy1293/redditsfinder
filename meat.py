@@ -186,12 +186,12 @@ def run(args, user):
 
         if not '-q' in args and not '--quiet' in args:
             tablesDict = {'postCounts': postCounts,
-                          'commentsLen': str( len(allPosts['comments']) ),
-                          'submissionsLen': str( len(allPosts['submissions']) ),
+                          'commentsLen': str(len(allPosts['comments'])),
+                          'submissionsLen': str(len(allPosts['submissions'])),
                           'dir': str(userDir),
                           'start': start,
                           'end': time.time(),
-                          'user':user}
+                          'user': user}
             printTotals(tablesDict)
 
     if not '-q' in args and not '--quiet' in args:
@@ -202,18 +202,14 @@ def run(args, user):
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def main():  # System arguments
-    #SOME REDDIT ACCOUNTS HAVE "-" at the beginning of their usernames.
-    #WHY?????? IT RUINS ARGSPARSE. TRIED TESTING WITH A LIST OF MANY USERNAMES AND FAILED.
-
     redditsfinderArgs = sys.argv[1:]
-    optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet', '-f')
+    optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet', '-f', '--file')
     enteredOptionalArgs = [i for i in redditsfinderArgs if i in optionalArgs]
 
     if '-f' in enteredOptionalArgs:
         usernames = open(sys.argv[-1]).read().splitlines()
     else:
         usernames = [i for i in redditsfinderArgs if i not in optionalArgs]
-
 
     print(f'Optional arguments: {enteredOptionalArgs}')
     print('Usernames: '), pprint(usernames)
