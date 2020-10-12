@@ -19,24 +19,33 @@ To deal with it, I gave up and looked online for an alternative. Luckily there w
 
 # Running redditsfinder
 
-**Test it on yourself to make sure it works.**\
+***Test it on yourself to make sure it works.***
+
 `redditsfinder yourusername`
 
-***Basic usage***\
+***Basic usage***
+
+**Returns every post to a different JSON file for each user and formats a table in the terminal for a quick view.\
+Takes an arbitrary number of user names, such that there is at least one user name.**\
+\
 `redditsfinder username`\
-`redditsfinder [options] username_0 username_1 username_2 ...`\
 \
-Returns every post to a different JSON file for each user and formats a table in the terminal for a quick view.\
-Takes an arbitrary number of user names, such that there is at least one user name.\
+`redditsfinder [options] username_0 username_1 username_2 ...`
 
-***With a file***\
+
+
+***With a file***
+
+**Uses user names from a file.**\
+\
 `-f` or `--file`\
-`redditsfinder [options] -f line_separated_text_file.txt`\
-\
-Uses user names from a file.
+`redditsfinder [options] -f line_separated_text_file.txt`
 
 
-***Optional args***\
+
+
+***Optional args***
+
 `-pics` returns URLs of image uploads.\
 `-pics -d` or `-pics --download` downloads them.\
 `-q` or `--quiet` turns off non log related print statements.
