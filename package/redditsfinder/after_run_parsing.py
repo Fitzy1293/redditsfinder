@@ -44,7 +44,9 @@ def shortenUrl(postType, postObjectsList, maxPrint): #Shortens URLs and formats 
             consolePrintableStr = '\n'.join(urlsCol)
 
         except Exception as e:
-            print(traceback.format_exc())
+            pass
+            #logging
+            #print(traceback.format_exc())
 
     return consolePrintableStr
 
