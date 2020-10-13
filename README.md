@@ -75,14 +75,80 @@ Takes an arbitrary number of user names, such that there is at least one user na
 `-f` or `--file`\
 `redditsfinder [options] -f line_separated_text_file.txt`
 
-
-
-
 ***Optional args***
 
 `-pics` returns URLs of image uploads.\
 `-pics -d` or `-pics --download` downloads them.\
 `-q` or `--quiet` turns off non log related print statements.
+
+# User object
+```json
+
+{
+    "comments": [
+      {
+          "id": "comment_1",
+          "created_utc": 0,
+          "subreddit": "",
+          "score": 1,
+          "link_id": "",
+          "parent_id": "",
+          "datetime": "",
+          "permalink": "",
+          "body": ["word_1", "word_2", "word_3", "..."]
+
+      },
+
+      {
+          "id": "comment_2",
+          "created_utc": 0,
+          "subreddit": "",
+          "score": 1,
+          "link_id": "",
+          "parent_id": "",
+          "datetime": "",
+          "permalink": "",
+          "body": ["word_1", "word_2", "word_3", "..."]
+
+      }
+
+      ],
+
+    "submissions": [
+
+      {
+        "id": "submission_1",
+        "created_utc": 0,
+        "subreddit": "",
+        "score": 1,
+        "link_id": "",
+        "parent_id": "",
+        "datetime": "",
+        "url": "",
+        "full_link": "",
+        "selftext": ["word_1", "word_2", "word_3", "..."]
+
+      },
+
+      {
+          "id": "submission_2",
+          "created_utc": 0,
+          "subreddit": "",
+          "score": 1,
+          "link_id": "",
+          "parent_id": "",
+          "datetime": "",
+          "url": "",
+          "full_link": "",
+          "selftext": ["word_1", "word_2", "word_3", "..."]
+
+      }
+
+    ]
+
+}
+
+```
 
 # Example Pushshift request log
 ![Imgur Image](https://imgur.com/VJDzFAh.png)
