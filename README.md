@@ -3,8 +3,6 @@
 
 **A command line program to easily download reddit users' post histories.**
 
-**Currently working on making it usable in python files.**
-
 Get any reddit user's entire post history with one command while avoiding the reddit API's 1000 post limit. \
 The main functionality of this program is making the requests to pushshift and manipulating pushshift's JSON for into more convenient data.
 
@@ -26,7 +24,9 @@ To deal with it, I gave up and looked online for an alternative. Luckily there w
 
 ***In a python file***
 
-**As of version
+**Currently working on making it usable in python files.**
+
+**As of version 1.3.2 you can use it to make standard python objects**
 
 ```python3
 
