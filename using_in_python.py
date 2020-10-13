@@ -3,12 +3,16 @@
 import redditsfinder
 from pprint import pprint
 
-pprint(redditsfinder.submissions(user='boomerfelonowl', log=True))
+# Pretty prints all submission dicts
+pprint(redditsfinder.submissions(user='spez', log=True))
 
-print("\nComments")
-comments = redditsfinder.comments(lim=25, user='boomerfelonowl')
-pprint([v for dict in comments  for k, v in dict.items() if k == 'body'])
+# Pretty prints all comment bodies and text based self-posts.
+print("Comments")
+comments = redditsfinder.comments(lim=25, user='spez')
+bodies = [v for dict in comments  for k, v in dict.items() if k == 'body']
+pprint(bodies)
 
-submissions = redditsfinder.submissions(lim=25, user='boomerfelonowl')
+submissions = redditsfinder.submissions(lim=25, user='spez')
 print("\nText Posts")
-pprint([v for dict in submissions  for k, v in dict.items() if k == 'selftext'])
+selftexts = [v for dict in submissions  for k, v in dict.items() if k == 'spez']
+pprint(selftexts)

@@ -42,13 +42,15 @@ from pprint import pprint
 pprint(redditsfinder.submissions(user='spez', log=True))
 
 # Pretty prints all comment bodies and text based self-posts.
-print("\nComments")
+print("Comments")
 comments = redditsfinder.comments(lim=25, user='spez')
-pprint([v for dict in comments  for k, v in dict.items() if k == 'body'])
+bodies = [v for dict in comments  for k, v in dict.items() if k == 'body']
+pprint(bodies)
 
 submissions = redditsfinder.submissions(lim=25, user='spez')
 print("\nText Posts")
-pprint([v for dict in submissions  for k, v in dict.items() if k == 'spez'])
+selftexts = [v for dict in submissions  for k, v in dict.items() if k == 'spez']
+pprint(selftexts)
 
 
 ```
