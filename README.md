@@ -3,6 +3,8 @@
 
 **A command line program to easily download reddit users' post histories.**
 
+**Currently working on making it usable in python files.**
+
 Get any reddit user's entire post history with one command while avoiding the reddit API's 1000 post limit. \
 The main meat of this program is making the requests to pushshift and manipulating pushshift's JSON for a more readable all_posts.json file. \
 There is also a handly image downloader I made that avoids a lot of the problems of trying to grab multiple images from different sites at once. Things like file types being not what the file is encoded as, and changed URLs. Or a URL that ends with .png that returns ASCII text. It gets imgur albums along with images, because at least for a while imgur was essentially reddit's non-official image hosting service.
@@ -42,16 +44,17 @@ from pprint import pprint
 pprint(redditsfinder.submissions(user='spez', log=True))
 
 # Pretty prints all comment bodies and text based self-posts.
-comments = redditsfinder.comments(lim=5, user='spez')
+user = 'spez'
+lim = '5'
+
+comments = redditsfinder.comments(lim=lim, user=user)
 bodies = [v for dict in comments  for k, v in dict.items() if k == 'body']
 
-submissions = redditsfinder.submissions(lim=5, user='spez')
+submissions = redditsfinder.submissions(lim=lim, user=user)
 selftexts = [v for dict in submissions  for k, v in dict.items() if k == 'selftext']
 
 pprint(bodies)
 pprint(selftexts)
-
-
 
 ```
 
