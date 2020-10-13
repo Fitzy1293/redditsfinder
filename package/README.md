@@ -7,7 +7,7 @@ Get any reddit user's entire post history with one command while avoiding the re
 The main functionality of this program is making the requests to pushshift and manipulating pushshift's JSON for into more convenient data.
 
 The colored terminal features and markup are from https://github.com/willmcgugan/rich \
-`pip3 install rich` which is one the coolest python packages. 
+`pip3 install rich` which is one the coolest python packages.
 
 https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a massive help for dealing with reddit's markdown.
 
@@ -24,7 +24,7 @@ https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a m
 
 **Currently working on making it usable in python files.**
 
-**As of version 1.3.2 you can use it to make standard python objects**
+**As of version 1.3.2 you can use it to make standard python objects.**
 
 ```python3
 import redditsfinder
@@ -37,21 +37,29 @@ pprint(redditsfinder.submissions(user='spez', log=True))
 
 
 ```python3
+'''
+This code uses redditsfinder to get text based posts.
+    redditsfinder.comments(lim=lim, user=user)
+    redditsfinder.submissions(lim=lim, user=user)
+'''
+
 import redditsfinder
 from pprint import pprint
 
-# Pretty prints all comment bodies and text based self-posts.
+def byKey(posts, postKey=''):
+    return [v for dict in posts  for k, v in dict.items() if k == postKey]
+
 user = 'spez'
 lim = 5
 
 comments = redditsfinder.comments(lim=lim, user=user)
-bodies = [v for dict in comments  for k, v in dict.items() if k == 'body']
+bodies = byKey(comments, postKey='body')
 
 submissions = redditsfinder.submissions(lim=lim, user=user)
-selftexts = [v for dict in submissions  for k, v in dict.items() if k == 'selftext']
+selftexts = byKey(submissions, postKey='selftext')
 
-pprint(bodies)
-pprint(selftexts)
+textPosts = {'bodies': bodies, 'selftexts': selftexts}
+pprint(textPosts)
 
 ```
 
