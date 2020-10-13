@@ -33,7 +33,7 @@ Takes an arbitrary number of user names, such that there is at least one user na
 
 
 
-***With a newline separated file.***
+***Newline separated file***
 
 **Uses user names from a file.**\
 \
