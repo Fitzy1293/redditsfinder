@@ -7,11 +7,9 @@ Get any reddit user's entire post history with one command while avoiding the re
 The main functionality of this program is making the requests to pushshift and manipulating pushshift's JSON for into more convenient data.
 
 The colored terminal features and markup are from https://github.com/willmcgugan/rich \
-`pip3 install rich` which is one the coolest python packages I've seen. It's very easy to pick up, but as is shown with the animated example in its README, still has a lot of depth.  
+`pip3 install rich` which is one the coolest python packages. 
 
-https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a massive help for dealing with reddit's strange markup. \
-Comments and self-posts can be unreadable when put in another format like JSON if they have a fair amount of formatting. \
-To deal with it, I gave up and looked online for an alternative. Luckily there was a good one readily available.
+https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a massive help for dealing with reddit's markdown.
 
 # Installation
 `pip3 install redditsfinder`
