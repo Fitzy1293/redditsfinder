@@ -3,7 +3,7 @@
 import redditsfinder
 from pprint import pprint
 
-# Pretty prints all submission dicts
+#Pretty prints all submission dicts
 #pprint(redditsfinder.submissions(user='spez', log=True))
 
 # Pretty prints all comment bodies and text based self-posts.
@@ -15,4 +15,3 @@ selftexts = [v for dict in submissions  for k, v in dict.items() if k == 'selfte
 
 pprint(bodies)
 pprint(selftexts)
-print(len(bodies), len(selftexts))

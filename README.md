@@ -38,8 +38,8 @@ Takes an arbitrary number of user names, such that there is at least one user na
 import redditsfinder
 from pprint import pprint
 
-# Pretty prints all submission dicts
-#pprint(redditsfinder.submissions(user='spez', log=True))
+#Pretty prints all submission dicts
+pprint(redditsfinder.submissions(user='spez', log=True))
 
 # Pretty prints all comment bodies and text based self-posts.
 comments = redditsfinder.comments(lim=5, user='spez')
