@@ -25,15 +25,9 @@ To deal with it, I gave up and looked online for an alternative. Luckily there w
 
 `redditsfinder yourusername`
 
-***Basic usage***
-
-**Returns every post to a different JSON file for each user and formats a table in the terminal for a quick view.\
-Takes an arbitrary number of user names, such that there is at least one user name.**\
-\
-`redditsfinder username`\
-`redditsfinder [options] username_0 username_1 username_2 ...`
-
 ***In a python file***
+
+**As of version
 
 ```python3
 
@@ -45,7 +39,7 @@ pprint(redditsfinder.submissions(user='spez', log=True))
 
 # Pretty prints all comment bodies and text based self-posts.
 user = 'spez'
-lim = '5'
+lim = 5
 
 comments = redditsfinder.comments(lim=lim, user=user)
 bodies = [v for dict in comments  for k, v in dict.items() if k == 'body']
@@ -57,6 +51,14 @@ pprint(bodies)
 pprint(selftexts)
 
 ```
+
+***Basic usage***
+
+**Returns every post to a different JSON file for each user and formats a table in the terminal for a quick view.\
+Takes an arbitrary number of user names, such that there is at least one user name.**\
+\
+`redditsfinder username`\
+`redditsfinder [options] username_0 username_1 username_2 ...`
 
 ***Newline separated file***
 
