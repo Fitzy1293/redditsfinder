@@ -34,14 +34,14 @@ pprint(submissions(user='spez', log=True))
 
 
 ```python3
-'''
-This code uses redditsfinder to get text based posts.
-    redditsfinder.comments(lim=lim, user=user)
-    redditsfinder.submissions(lim=lim, user=user)
-'''
+
 
 import redditsfinder
 from pprint import pprint
+
+'''
+This code uses redditsfinder to get text based posts.
+'''
 
 def byKey(posts, postKey=''):
     return [v for dict in posts  for k, v in dict.items() if k == postKey]
@@ -50,12 +50,13 @@ user = 'spez'
 lim = 5
 
 comments = redditsfinder.comments(lim=lim, user=user)
-bodies = byKey(comments, postKey='body')
-
 submissions = redditsfinder.submissions(lim=lim, user=user)
-selftexts = byKey(submissions, postKey='selftext')
 
-textPosts = {'bodies': bodies, 'selftexts': selftexts}
+textPosts = {
+    'bodies': byKey(comments, postKey='body'),
+    'selftexts': byKey(submissions, postKey='selftext')
+    }
+
 pprint(textPosts)
 
 ```
