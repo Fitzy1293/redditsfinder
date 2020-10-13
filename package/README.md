@@ -29,12 +29,18 @@ To deal with it, I gave up and looked online for an alternative. Luckily there w
 **As of version 1.3.2 you can use it to make standard python objects**
 
 ```python3
-
 import redditsfinder
 from pprint import pprint
 
-#Pretty prints all submission dicts
+#Pretty prints all submission dicts.
 pprint(redditsfinder.submissions(user='spez', log=True))
+
+```
+
+
+```python3
+import redditsfinder
+from pprint import pprint
 
 # Pretty prints all comment bodies and text based self-posts.
 user = 'spez'
