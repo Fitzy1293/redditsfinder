@@ -1,4 +1,4 @@
-# redditsfinder
+# redditsfinder --- reddit user info 
 **`pip3 install redditsfinder`**
 
 **A command line program to easily download reddit users' post histories.**
