@@ -31,7 +31,25 @@ Takes an arbitrary number of user names, such that there is at least one user na
 `redditsfinder username`\
 `redditsfinder [options] username_0 username_1 username_2 ...`
 
+***In a python file***
 
+```python3
+
+import redditsfinder
+from pprint import pprint
+
+pprint(redditsfinder.submissions(user='spez', log=True))
+
+print("\nComments")
+comments = redditsfinder.comments(lim=25, user='spez')
+pprint([v for dict in comments  for k, v in dict.items() if k == 'body'])
+
+submissions = redditsfinder.submissions(lim=25, user='spez')
+print("\nText Posts")
+pprint([v for dict in submissions  for k, v in dict.items() if k == 'spez'])
+
+
+```
 
 ***Newline separated file***
 

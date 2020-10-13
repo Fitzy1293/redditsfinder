@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "Redditsfinder"
-version = "1.2.2"
+version = "1.3.2"
 description = "Archive a reddit user's post history. Formatted overview of a profile, JSON containing every post, and picture downloads."
 authors = ["fitzy1293 <berkshiremind@gmail.com>"]
 # New attributes
