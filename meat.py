@@ -186,7 +186,7 @@ def run(args, user):
         imageSubmissionLog = f'[bold blue underline]\nImages submitted by {user}:[/bold blue underline]\n{imageStatus}'
         console.print(imageSubmissionLog)
 
-        if not '-d' in args and not '--download' in args:
+        if '-d' in args or '--download' in args:
             print()
             imagesdl(images, userDir)
 
