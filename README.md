@@ -1,12 +1,9 @@
-# redditsfinder --- reddit user info
+# redditsfinder - reddit user info
 **`pip3 install redditsfinder`**
 
-**A command line program to easily download reddit users' post histories.**
+**A program to get reddit user post data.**
 
-Get any reddit user's entire post history with one command while avoiding the reddit API's 1000 post limit. \
-The main functionality of this program is making the requests to pushshift and manipulating pushshift's JSON for into more convenient data.
-
-The colored terminal features and markup are from https://github.com/willmcgugan/rich \
+The colored terminal features for the CLI are from https://github.com/willmcgugan/rich \
 `pip3 install rich` which is one the coolest python packages.
 
 https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a massive help for dealing with reddit's markdown.
@@ -16,7 +13,7 @@ https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a m
 
 # Running redditsfinder
 
-***Test it on yourself to make sure it works.***
+***Test it on yourself to make sure it works (or another valid user name).***
 
 `redditsfinder yourusername`
 
@@ -27,11 +24,11 @@ https://github.com/LoLei/redditcleaner `pip3 install redditcleaner` was also a m
 **As of version 1.3.2 you can use it to make standard python objects.**
 
 ```python3
-import redditsfinder
+from redditsfinder import submissions
 from pprint import pprint
 
 #Pretty prints all submission dicts.
-pprint(redditsfinder.submissions(user='spez', log=True))
+pprint(submissions(user='spez', log=True))
 
 ```
 
@@ -92,6 +89,3 @@ Takes an arbitrary number of user names, such that there is at least one user na
 
 # Example terminal table
 ![Imgur Image](https://imgur.com/ZncrWFX.png)
-
-# Example JSON object
-![Imgur Image](https://imgur.com/SfoDXHQ.png)
