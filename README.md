@@ -61,7 +61,7 @@ pprint(textPosts)
 
 ```
 
-***Basic usage***
+***CLI usage***
 
 **Returns every post to a different JSON file for each user and formats a table in the terminal for a quick view.\
 Takes an arbitrary number of user names, such that there is at least one user name.**\
