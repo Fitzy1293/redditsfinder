@@ -1,4 +1,3 @@
-import redditcleaner #Not in standard lib.
 import time
 import requests
 import traceback
@@ -85,7 +84,7 @@ def pushshift(lim, postType, postSetMaxLen, user='', log=False): #Pushshift requ
 
         for postData in data:
             before = postData['created_utc']
-            yield cleanupPostData(postData, postType)
+            yield postData
 
         ct += len(data)
 
@@ -95,7 +94,7 @@ def pushshift(lim, postType, postSetMaxLen, user='', log=False): #Pushshift requ
         if len(data) < postSetMaxLen:
             break
 
-        time.sleep(.75)
+        time.sleep(.75) # rate limiting, pushshift says too bad if you go to quick
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -113,59 +112,81 @@ def submissions(lim=None, user='', log=False):
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def textPostWords(redditRawText): # Makes body and selftext not an abomination.
-    return redditcleaner.clean(redditRawText).split()
-    '''
-    # Spliting post string into sets of 15 words so the output is readable when it reaches it's place within json.
-    splitWords = []
-    temp = []
-    for i, word in enumerate(cleaned):
-        temp.append(word)
-        if i % 15 == 0 and i != 0:
-            splitWords.append(temp)
-            temp = []
-
-    # Another way of saying if the number of totalW words % 15 != 0. Need to put the leftover words where they belong
-    if len(temp) != 0:
-        splitWords.append(temp)
-
-    return [' '.join(cleanPost) for cleanPost in splitWords]
-    '''
-#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#=============================================================================================================================
-#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def countPosts(allPosts):  # Count and order most posted subs.
-    postCounts = {}
-    for postType, posts in allPosts.items():
-        subreddits = [post['subreddit'] for post in posts if 'subreddit' in post.keys()]
-        subredditSet = set(subreddits)
 
-        counts = []
-        for subreddit in subredditSet:
-            if subreddit is not None:
-                counts.append([subreddit,subreddits.count(subreddit)])
+    '''
+    Formats data for the table.
+    '''
+    postSubredditKarmaStrings = []
 
-        #Sort by number of posts user has in each sub that they have posted in.
-        sortedCounts = sorted(counts, key=lambda subredditPostCount: (subredditPostCount[1], subredditPostCount[0]), reverse=True)
-        postCounts[postType] = sortedCounts
 
-    return postCounts
+    commentSubList = [] # To turn into a set
+    for i, comment in enumerate(allPosts.get('comments')):
+        urlFromIds = f'reddit.com/comments/{comment.get("link_id")[3:]}//{comment.get("id")}'
+        sub = comment.get("subreddit")#.lower()
+        karma = comment.get("score")
+        subKarmaStr = f'{sub}-c-{karma}|{urlFromIds}'
+
+        commentSubList.append(sub)
+        postSubredditKarmaStrings.append(subKarmaStr)
+
+    submissionSubList = [] # To turn into a set
+    for submission in allPosts.get('submissions'):
+        urlFromIds = f'reddit.com/{comment.get("id")}'
+        sub = submission.get("subreddit")#.lower()
+        karma = submission.get("score")
+        subKarmaStr = f'{sub}-s-{karma}|{urlFromIds}'
+
+        submissionSubList.append(sub)
+        postSubredditKarmaStrings.append(subKarmaStr)
+
+    postSubredditSet = set(commentSubList) | set(submissionSubList)
+
+
+    returnList = []
+    for uniqSub in sorted(postSubredditSet):
+        commentsKarmaTotal = 0
+        submissionsKarmaTotal = 0
+        postTypeStartIndex = len(uniqSub) + 1
+        countPostsList = []
+        for post in postSubredditKarmaStrings:
+            if post.startswith(f'{uniqSub}-'):
+
+                typePipeKarmaStr = post[postTypeStartIndex:post.find('|')]
+                countablePostTypeChar = typePipeKarmaStr[0]
+
+                if countablePostTypeChar == 'c':
+                    commentsKarmaTotal += int(typePipeKarmaStr[2:])
+                elif countablePostTypeChar == 's':
+                    submissionsKarmaTotal+= int(typePipeKarmaStr[2:])
+
+
+
+                countPostsList.append(countablePostTypeChar)
+
+        totalKarma    = commentsKarmaTotal + submissionsKarmaTotal
+        commentsCt    = countPostsList.count('c')
+        submissionsCt = countPostsList.count('s')
+        info          = ( (str(commentsCt), str(commentsKarmaTotal)), (str(submissionsCt), str(submissionsKarmaTotal)) )
+
+        returnList.append({'sub': uniqSub, 'karma': totalKarma, 'submission,comment': info})
+
+
+    sortedByKarmaThenName = sorted(returnList, key = lambda i: (i['karma'], i['sub']), reverse=True)
+
+    return sortedByKarmaThenName
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def writeFiles(allPosts, postCounts, user, userDir):
+def writeFiles(allPosts, subredditInfo, user, userDir):
     if len(allPosts) != 0:
-        jPath = os.path.join(userDir, 'all_posts.json')
-        with open(jPath, 'w+', newline='\n') as f:
-            json.dump(allPosts, f, indent=4)
+        jPath = os.path.join(userDir, 'posts.json')
+        with open(jPath, 'w+', newline='\n') as jsonFile:
+            json.dump(allPosts, jsonFile, indent=4)
 
-        tPath = os.path.join(userDir, 'subreddit_count.txt')
-        with open(tPath, 'w+') as g:
-            for k, v in postCounts.items():
-                g.write(f'{k}\n')
-                for i in v:
-                    g.write(f'{i[0]}, {str(i[1])}\n')
-
+        tPath = os.path.join(userDir, 'count.json')
+        with open(tPath, 'w+') as subredditsFile:
+            json.dump(subredditInfo, subredditsFile, indent=4)
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -15,97 +15,76 @@ TO DO:
     - Make the module useful when imported
 '''
 
-import urllib.request
+#import urllib.request
 import requests
 import json
 import time
 import os,sys
-import traceback
-from pprint import pprint
-from urllib.error import HTTPError
+#from urllib.error import HTTPError
 from pathlib import Path
-import argparse
 
 from rich.table import Table,Column
 from rich.console import Console
 
-from redditsfinder_utils import *
-from after_run_parsing import *
+from .redditsfinder_utils import *
+
+CONSOLE = Console()
 
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def getPosts(user, postType): # Pushshift API requests in chunks of 100
+def getPosts(user, postType, printIt=True): # Pushshift API requests in chunks of 100
     console = Console()
-    console.print(f'[bold blue underline]{postType[0].upper()}{postType[1:]} request log:')
+    if printIt:
+        console.print(f'[bold blue underline]{postType[0].upper()}{postType[1:]} request log:')
 
     postSetMaxLen = 100 # Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
 
-    return pushshift(None, postType, postSetMaxLen, user=user, log=True)
+    return pushshift(None, postType, postSetMaxLen, user=user, log=printIt)
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def printTotals(tablesDict): #Prints table after the pushshift log.
-    print('\n\n')
-    console = Console()
+def printTotals(dataForTable, maxRecentPosts=50, printIt=True): #Prints table after the pushshift log.
 
-    header = [
-            '',
-            'Recent comments:\nsubmission ID\ncomment ID',
-            'Recent submissions:\nsubmission ID',
-            'Comments count:\nfor each sub',
-            f'[bold red]{tablesDict["commentsLen"]}[/bold red]',
-            'Submissions count:\nfor each sub',
-            f'[bold red]{tablesDict["submissionsLen"]}[/bold red]'#,
-            #tablesDict["dir"],
-            #'Run Time'
-    ]
-
-    console.log(f'[magenta]{tablesDict["user"]}')
+    header = (
+                'line #\n',
+                'subreddit\n',
+                'karma\n',
+                'comment\ncount',
+                'comment\nkarma',
+                'submission\ncount',
+                'submission\nkarma'
+    )
 
     table = Table(show_header=True,header_style="bold blue")
 
-    for i in header:
-        table.add_column(i, justify='left')
-
-    commentsColumn = '\n'.join([sub[0] for sub in tablesDict['postCounts']['comments']])
-    commentsCt = '\n'.join([f'[bold red]{sub[1]}[/bold red]' for sub in tablesDict['postCounts']['comments']])
-
-    submissionsColumn = '\n'.join([sub[0] for sub in tablesDict['postCounts']['submissions']])
-    submissionsCt = '\n'.join([f'[bold red]{sub[1]}[/bold red]' for sub in tablesDict['postCounts']['submissions']])
-
-    maxRecentPosts = 50
-    posts = postRunJson(os.path.join(tablesDict['dir'], 'all_posts.json'), maxRecentPosts)
-
-    #Numbers the columns
-    columnLengths = max (i.count('\n') for i in [posts[0],posts[1], commentsColumn, submissionsColumn]) + 1
-    columnNums = '\n'.join([str(i) for i in range(columnLengths)])
-    print(columnLengths)
+    for colTitle in header:
+        table.add_column(colTitle, justify='left')
 
 
-    rows = [
-            columnNums,
-            posts[0],
-            posts[1],
-            f'[purple]{commentsColumn}[/purple]',
-            commentsCt,
-            f'[purple]{submissionsColumn}[/purple]',
-            submissionsCt,
-            '[magenta underline]all_posts.json\nsubreddit_count.txt',
-            f'[magenta underline]{round(tablesDict["end"] - tablesDict["start"], 1)} s'
-    ]
+    for i, subredditDictObject in enumerate(dataForTable):
+        subTitle = subredditDictObject.get('sub')
+        subKarma = subredditDictObject.get('karma')
+        commentInfo, submissionInfo  = subredditDictObject.get('submission,comment') #(comment data, submission data)
 
 
-    table.add_row(
-    rows[0], rows[1], rows[2], rows[3], rows[4], rows[5], rows[6]#, rows[7], rows[8]
-    )
+        table.add_row(
+                        f'[bold red]{str(i+1)}[/bold red]',
+                        f'[bold magenta underline]{subTitle}[/bold magenta underline]',
+                        f'[bold magenta underline]{subKarma}[/bold magenta underline]',
+                        f'[bold cyan underline]{commentInfo[0]} [/bold cyan underline]',
+                        f'[bold cyan]{commentInfo[1]}[/bold cyan]',
+                        f'[bold green underline]{submissionInfo[0]} [/bold green underline]',
+                        f'[bold green]{submissionInfo[1]}[/bold green]'
+        )
 
-    console.print(table, justify='center', style='bold white')
-    print()
+    CONSOLE.print(table, justify='center')
+
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def run(cliArgs=[], user='', **kwargs):
+
+def run(cliArgs, user='', printIt=True, **kwargs):
     start = time.time()
     console = Console()
 
@@ -115,88 +94,107 @@ def run(cliArgs=[], user='', **kwargs):
     if 'user' in kwargs.keys():
         user = kwargs['user']
 
-
-    userDir = Path.cwd() / 'users' / user
-    userDir.mkdir(parents=True, exist_ok=True)
-
-    console.print(f'[bold blue]\nGathering and formatting data from pushshift for {user}.\n')
+    if printIt:
+        console.print(f'[bold blue]Gathering and formatting data from pushshift for {user}.\n')
 
     if  '-pics' in cliArgs or '--pics' in cliArgs:
         keyType = {'submission': ('url', 'created_utc',)}
-        images = imageUrls(user, [i for i in getPosts(user, 'submission')])
+        images = imageUrls(user, [i for i in getPosts(user, 'submission', printIt=printIt)])
 
-        images = set(open(os.path.join(userDir,'images.txt')).read().splitlines())
-        imageStatus = '\n'.join([f'\t[bold green]{i+1} [cyan]{image}' for i, image in enumerate(images)])
+        images             = set(open(os.path.join(userDir,'images.txt')).read().splitlines())
+        imageStatus        = '\n'.join([f'\t[bold green]{i+1} [cyan]{image}' for i, image in enumerate(images)])
         imageSubmissionLog = f'[bold blue underline]\nImages submitted by {user}:[/bold blue underline]\n{imageStatus}'
-        console.print(imageSubmissionLog)
+        if printIt:
+            console.print(imageSubmissionLog)
 
         if '-d' in cliArgs or '--download' in cliArgs:
-            print()
             imagesdl(images, userDir)
-
     else:
-        allPosts = {'comments': [i for i in getPosts(user, 'comment')],
-                    'submissions': [i for i in getPosts(user, 'submission')]}
-        postCounts = countPosts(allPosts)
-        writeFiles(allPosts, postCounts, user, userDir)
+        allPosts = {'comments': [i for i in getPosts(user, 'comment', printIt=printIt)],
+                    'submissions': [i for i in getPosts(user, 'submission', printIt=printIt)]}
+        numericInfoBySub = countPosts(allPosts)
 
-        if not '-q' in cliArgs and not '--quiet' in cliArgs:
-            tablesDict = {'postCounts': postCounts,
-                          'commentsLen': str(len(allPosts['comments'])),
-                          'submissionsLen': str(len(allPosts['submissions'])),
-                          'dir': str(userDir),
-                          'start': start,
-                          'end': time.time(),
-                          'user': user}
-            printTotals(tablesDict)
+        if printIt:
+            print()
+            printTotals(numericInfoBySub)
+            print()
+        if '--write' or '-w' in cliArgs:
+            userDir = Path.cwd() / 'users' / user
+            userDir.mkdir(parents=True, exist_ok=True)
+            writeFiles(allPosts, numericInfoBySub, user, userDir)
 
-    if not '-q' in cliArgs and not '--quiet' in cliArgs:
-        fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
-        console.print(f'\n[bold cyan underline]{userDir}{fnamesStr}')
-        console.print(f'\n[bold blue]Run time - {round(time.time() - start, 1)} s\n')
+            if printIt:
+                fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
+                console.print(f'\n[bold cyan underline]{userDir}{fnamesStr}')
+
+    if printIt:
+        console.print(f'[bold blue]Run time - {round(time.time() - start, 1)} (s)[/bold blue]\n[bold cyan]{"-"*50}[/bold cyan]')
+
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 def main():  # System arguments
 
     if len(sys.argv) == 1:
         print('''Running redditsfinder
 
         Test it on yourself to make sure it works.
-
-        redditsfinder yourusername
+            redditsfinder someusername
 
         Basic usage
+            redditsfinder username
+            redditsfinder [options] username_0 username_1 username_2 ...
 
-        redditsfinder username
-        redditsfinder [options] username_0 username_1 username_2 ...
+        With an input file
+            -f or --file.
+            redditsfinder [options] -f line_separated_text_file.txt
 
-        With a file
+        Examples
+            - just print the summary table to stdout
+                $ redditsfinder someusername
 
-        -f or --file.
-        redditsfinder [options] -f line_separated_text_file.txt
+            - save data locally and print the summary table to stdout
+                $ redditsfinder --write someusername
+
+            - just save data locally without printing
+                $ redditsfinder --write --quiet someusername
+
+            - download pictures
+                $ redditsfinder --pics someusername
 
         Optional args
-
-        -pics returns URLs of image uploads.
-        -pics -d or -pics --download downloads them.
-        -q or --quiet turns off non log related print statements.''' )
+            --pics returns URLs of image uploads
+            -pics -d or --pics --download downloads them
+            -quiet or -q turns off printing''' )
 
 
     else:
         redditsfinderArgs = sys.argv[1:]
-        optionalArgs = ('-pics', '-d', '--download', '-q', '--quiet', '-f', '--file')
-        enteredOptionalArgs = [i for i in redditsfinderArgs if i in optionalArgs]
+        optionalArgs = {'--write', '-w', '-pics', '--pics', '-d', '--download', '-q', '--quiet', '-f', '--file'}
+        enteredOptionalArgs = set([i for i in redditsfinderArgs if i in optionalArgs])
 
         if '-f' in enteredOptionalArgs:
-            usernames = open(sys.argv[-1]).read().splitlines()
+            if sys.argv[-1] in os.path.exists():
+                with open(sys.argv[-1]) as f:
+                    usernames = f.read().splitlines()
+            else:
+                sys.exit(f'error: {sys.argv[-1]} not found')
         else:
             usernames = [i for i in redditsfinderArgs if i not in optionalArgs]
 
-        print(f'Optional arguments: {enteredOptionalArgs}')
-        print('Usernames: '), pprint(usernames)
+        usersCt = len(usernames)
+
+        if not '-q' in enteredOptionalArgs and not '--quiet' in enteredOptionalArgs:
+            printIt = True
+        else:
+            printIt=False
+
+        if usersCt > 1 and printIt:
+            print('\nnote: this is not done in parallel, an account like automoderator with millions of posts will be blocking\n')
 
         for user in usernames:
-            run(enteredOptionalArgs, user)
+            run(enteredOptionalArgs, user=user, printIt=printIt)
 
-main()
+if __name__ == '__main__':
+    main()

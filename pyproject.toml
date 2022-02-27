@@ -17,9 +17,8 @@ include = [
 [tool.poetry.dependencies]
 # Updated Python version
 python = "^3.6"
-rich = "^7.0.0"
-redditcleaner = "^1.1.2"
-requests = "^2.24.0"
+rich = "*"
+requests = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
