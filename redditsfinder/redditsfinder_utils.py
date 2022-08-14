@@ -132,7 +132,7 @@ def countPosts(allPosts):  # Count and order most posted subs.
 
     submissionSubList = [] # To turn into a set
     for submission in allPosts.get('submissions'):
-        urlFromIds = f'reddit.com/{comment.get("id")}'
+        urlFromIds = f'reddit.com/{submission.get("id")}'
         sub = submission.get("subreddit")#.lower()
         karma = submission.get("score")
         subKarmaStr = f'{sub}-s-{karma}|{urlFromIds}'
@@ -194,93 +194,89 @@ def imageUrls(user, submissions):
     urls = [v for i in submissions  for k,v in i.items() if k == 'url']
     imageUrls = []
     for url in urls:
-        if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
+        if url.endswith(('.png', '.PNG', '.jpg', '.JPG', 'jpeg', 'JPEG' '.gif', '.GIF')):
             imageUrls.append(url)
             continue
 
         if '://reddit.com' in url:
             continue
-        if 'imgur.com' in url:
+        elif 'imgur.com' in url:
             if '/a/' in url:
                 imageUrls.append(url + '/zip')
             else:
                 imageUrls.append(url + '.jpg')
+    return imageUrls
 
-    imageUrlsStr = '\n'.join(imageUrls)
-    userDir = Path.cwd() / 'users' / user
-    images = os.path.join(str(userDir), 'images.txt')
-    with open(images, 'w+') as f:
-        f.write(imageUrlsStr+ '\n')
-    return imageUrlsStr
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def imagesdl(images, userDir): #Needs to deal with all the nonsense involved with image formatting
+def imagesdl(images, userDir): # Needs to deal with all the nonsense involved with image formatting
     console = Console()
+
+    if not os.path.exists('users'):
+        os.mkdir('users')
+    if not os.path.exists(userDir):
+        os.mkdir(userDir)
+
     for i, url in enumerate(images):
         try:
-            response = requests.get(url, stream=True)
 
-            if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')):
+            if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')) and not 'imgur.com' in url:
                 urlType = 'image'
-                fileType = f'{url.split(".")[-1]}'
-                imagePath = os.path.join(userDir, f'{str(i+1)}.{fileType}')
+                fname = url.rstrip("/").split("/")[-1]
+                imagePath = os.path.join(userDir, f'{fname}')
+                response = requests.get(url, stream=True)
+                status_code = response.status_code
+                if status_code != 200:
+                    console.print(f'\t[bold red]{status_code}\t{i+1} bad response {url}')
+                    continue
 
             else:
-                urlType = 'zip'
-                fileType = 'urlType'
-                imagePath = os.path.join(userDir, f'{i+1}.zip')
-
-            with open(imagePath, 'wb+') as f:
-                f.write(response.content)
-
-            dlLog = f'\t{os.path.split(imagePath)[-1]} - Downloaded: {url}'
-            console.print(f'[green]{dlLog}')
-
-            try:
-                bytes = open(imagePath,'rb').read().decode()[1:9]
-                if type(bytes) == str and  bytes[0:2] == 'PK': #A zip file
+                #url = url.replace('.gifv.', '.')
+                status_code_imgur = requests.get(url)
+                status_code = status_code_imgur.status_code
+                if  status_code != 200 and not url.endswith('.gifv.jpg'):
+                    console.print(f'\t[bold red]{status_code}\t{i+1} bad response {url}')
                     continue
 
-                else:
-                    console.print(f'[bold red]Invalid image link - removing {os.path.split(imagePath)[-1]}{" " * 4}')
-                    os.remove(imagePath)
-                    continue
-            except UnicodeDecodeError as e:
-                pass
+                if url.startswith('https://imgur.com') or url.startswith('https://i.imgur.com'):
+                    if url.endswith('.gifv.jpg'):
+                        url = url.replace('.gifv.jpg', '.mp4')
+                        response = requests.get(url, stream=True)
+                        imagePath = os.path.join(userDir, url.split('/')[-1])
+                    elif not url.endswith('/zip'): # jpgs, pngs
+                        response = requests.get(url, stream=True)
+                        imagePath = os.path.join(userDir, url.split('/')[-1])
 
-            changedFlag = False
-            imghdrExtension = imghdr.what(imagePath)
-            if str(imghdrExtension) == 'None':
-                imghdrExtension = 'jpeg'
-                changedFlag = True
+                    else: # zips
+                        url = url.rstrip('/').rstrip('/zip')
+                        urlType   = 'zip'
+                        get_real_url_response  = requests.get(url)
 
-            if urlType == 'image' and not changedFlag:
-                newFname = f'{i+1}.{imghdrExtension}'
 
-                newFpath = os.path.join(userDir, newFname)
-                os.rename(imagePath, newFpath)
+                        html_from_fake_response = get_real_url_response.text
+                        real_url = html_from_fake_response.split('<meta property="og:image"')[1]
+                        final_real_url = real_url[real_url.find('https://'):real_url.find('">')]
 
-            try:
-                with ZipFile(imagePath, 'r') as zipObj:
-                    listOfiles = zipObj.namelist()
+                        if '?' in final_real_url:
+                            actual_final_url = final_real_url.split('?')[0]
+                        else:
+                            actual_final_url = final_real_url
 
-            except Exception as e:
-                if urlType == 'image':
-                    continue
+                        response = requests.get(actual_final_url, stream=True)
+                        imagePath = os.path.join(userDir, actual_final_url.rstrip('/').split('/')[-1])
 
-                newFname = f'{i+1}.{imghdrExtension}'
+            if not os.path.exists(imagePath):
+                with open(imagePath, 'wb') as f:
+                    f.write(response.content)
 
-                newFpath = os.path.join(userDir, newFname)
-                os.rename(imagePath, newFpath)
+                dlLog = f'{i+1} {os.path.split(imagePath)[-1]} - Downloaded: {url}'
+                console.print(f'\t[green]{status_code}\t{dlLog}[/green]')
 
-                logSplit = dlLog.split(' ')
-                logSplit[1] = f'{i+1}.{imghdrExtension}'
+            elif os.path.exists(imagePath):
+                dlLog = f'{i+1} {os.path.split(imagePath)[-1]} - Already Downloaded: {url}'
+                console.print(f'\t[green]{status_code}[/green]\t[yellow]{dlLog}')
 
-                changeExtension = str(i+1) + '.zip => ' + newFname
 
-                spaces = len(logSplit[0] + logSplit[1]) - len(changeExtension) + 4
-                console.print(f'[bold blue]{changeExtension}{" " * spaces}{e}')
-
-        except Exception as e:
-            console.print(f'[bold red]{i} {url} unexpected exception: {traceback.format_exc()}')
+        except Exception as e: # don't do this...
+            console.print(f'\t{status_code}[bold red]\t{i+1} {url} unexpected exception\n\t{e}')

@@ -1,0 +1,20 @@
+#!/bin/env bash
+
+rm -rf users
+
+set -eu
+
+grep -v -E "^requests[[:space:]]|^rich[[:space:]]|\[tool.poetry.dependencies\]|^python[[:space:]]" pyproject.toml > temppyproject.toml
+
+echo -e '\n[tool.poetry.dependencies]\npython = "^3.7"' >> temppyproject.toml
+
+pip list | grep -E "^requests[[:space:]]|^rich[[:space:]]" | \
+    sed -e 's/  /=/' -e 's/ //g' -e 's/=/ = \"/' -e 's/$/\"/' >> temppyproject.toml
+
+mv temppyproject.toml pyproject.toml
+
+tail -n 4 pyproject.toml
+
+git add .
+git commit -m "$@ $(date)"
+git push origin -u master
