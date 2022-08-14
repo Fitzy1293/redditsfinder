@@ -15,6 +15,6 @@ mv temppyproject.toml pyproject.toml
 
 tail -n 4 pyproject.toml
 
+echo "$1 $(date)"
 git add .
-git commit -m "$@ $(date)"
-git push origin -u master
+git commit -m "$1 $(date)"
