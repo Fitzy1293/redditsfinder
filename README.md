@@ -1,5 +1,8 @@
 # redditsfinder - reddit user info
-**`pip3 install redditsfinder`**
+
+Broke it a little bit, use the latest working version. 
+
+**`pip3 install redditsfinder==1.3.2`**
 
 **A program to get reddit user post data.**
 
