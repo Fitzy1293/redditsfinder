@@ -17,5 +17,5 @@ tail -n 4 pyproject.toml
 
 echo "$1 $(date)"
 git add .
-git commit -m "$1 $(date)"
 git status
+git commit -m "$1 $(date)"

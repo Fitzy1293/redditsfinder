@@ -1,8 +1,8 @@
 # redditsfinder - reddit user info
 
-Broke it a little bit, use the latest working version.
+It's in a good state again with some quality of life improvements. 
 
-**`pip3 install redditsfinder==1.3.2`**
+**`pip3 install redditsfinder`**
 
 **A program to get reddit user post data.**
 
@@ -44,13 +44,13 @@ Running redditsfinder
 
 ## Downloading Images
 
-redditsfinder -pd someusername
+`redditsfinder -pd someusername`
 
 ![download](./imgs/pics_downloader.png)
 
 ## Creating a command 
 
-redditsfinder someusername
+`redditsfinder someusername`
 
 ![table](./imgs/table.png)
 
