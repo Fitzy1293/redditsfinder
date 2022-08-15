@@ -167,7 +167,7 @@ def main():  # System arguments
     Optional args
         --pics returns URLs of image uploads
         -pd or --pics --download downloads them
-            -quiet or -q turns off printing''' )
+            -quiet or -q turns off printing''')
 
 
     else:
