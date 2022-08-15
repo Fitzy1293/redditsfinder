@@ -176,7 +176,7 @@ def main():  # System arguments
         enteredOptionalArgs = set([i for i in redditsfinderArgs if i in optionalArgs])
 
         if '-f' in enteredOptionalArgs:
-            if sys.argv[-1] in os.path.exists():
+            if  os.path.exists(sys.argv[sys.argv.index('-f') +1]):
                 with open(sys.argv[-1]) as f:
                     usernames = f.read().splitlines()
             else:

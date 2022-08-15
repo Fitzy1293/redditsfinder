@@ -223,7 +223,7 @@ def imagesdl(images, userDir): # Needs to deal with all the nonsense involved wi
 
             if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')) and not 'imgur.com' in url:
                 urlType = 'image'
-                fname = url.rstrip("/").split("/")[-1]
+                fname = url.rstrip("/").split("/")[-1].replace('?', '-')
                 imagePath = os.path.join(userDir, f'{fname}')
                 response = requests.get(url, stream=True)
                 status_code = response.status_code
