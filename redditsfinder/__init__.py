@@ -97,7 +97,7 @@ def run(cliArgs, user='', printIt=True, **kwargs):
     if printIt:
         console.print(f'[bold blue]Gathering and formatting data from pushshift for {user}.\n')
 
-    if  '-pics' in cliArgs or '--pics' in cliArgs:
+    if  '-pd' in cliArgs or '-p' in cliArgs or '--pics' in cliArgs:
         keyType = {'submission': ('url', 'created_utc',)}
         images                 = imageUrls(user, [i for i in getPosts(user, 'submission', printIt=printIt)])
 
@@ -106,7 +106,7 @@ def run(cliArgs, user='', printIt=True, **kwargs):
             imageSubmissionLog = f'[bold blue underline]\nImages submitted by {user}:[/bold blue underline]\n{imageStatus}'
             console.print(imageSubmissionLog)
 
-        if '-d' in cliArgs or '--download' in cliArgs:
+        if '-pd' in cliArgs or '-d' in cliArgs or '--download' in cliArgs:
             imagesdl(images, os.path.join(os.getcwd(), 'users', user))
             print()
 
@@ -162,17 +162,17 @@ def main():  # System arguments
             $ redditsfinder --write --quiet someusername
 
         - download pictures
-            $ redditsfinder --pics someusername
+            $ redditsfinder -pd someusername
 
     Optional args
         --pics returns URLs of image uploads
-        -pics -d or --pics --download downloads them
+        -pd or --pics --download downloads them
             -quiet or -q turns off printing''' )
 
 
     else:
         redditsfinderArgs = sys.argv[1:]
-        optionalArgs = {'--write', '-w', '-pics', '--pics', '-d', '--download', '-q', '--quiet', '-f', '--file'}
+        optionalArgs = {'--write', '-w', '-p', '--pics', '-d', '-pd', '--download', '-q', '--quiet', '-f', '--file'}
         enteredOptionalArgs = set([i for i in redditsfinderArgs if i in optionalArgs])
 
         if '-f' in enteredOptionalArgs:
