@@ -9,7 +9,7 @@ grep -v -E "^requests[[:space:]]|^rich[[:space:]]|\[tool.poetry.dependencies\]|^
 echo -e '\n[tool.poetry.dependencies]\npython = "^3.7"' >> temppyproject.toml
 
 pip list | grep -E "^requests[[:space:]]|^rich[[:space:]]" | \
-    sed -e 's/  /=/' -e 's/ //g' -e 's/=/ = \"/' -e 's/$/\"/' >> temppyproject.toml
+    sed -e 's/  /=/' -e 's/ //g' -e 's/=/ = \"\^/' -e 's/$/\"/' >> temppyproject.toml
 
 mv temppyproject.toml pyproject.toml
 
@@ -19,3 +19,6 @@ echo "$1 $(date)"
 git add .
 git status
 git commit -m "$1 $(date)"
+
+echo
+git push -u origin master
