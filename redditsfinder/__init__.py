@@ -178,7 +178,7 @@ def main():  # System arguments
         if '-f' in enteredOptionalArgs:
             infile = sys.argv[sys.argv.index('-f') +1]
             if  os.path.exists(infile):
-                with open(infile as f:
+                with open(infile, 'w') as f:
                     usernames = f.read().splitlines()
             else:
                 sys.exit(f'error: {sys.argv[-1]} not found')
