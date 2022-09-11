@@ -2,5 +2,4 @@ __pycache__/
 redditsfinder/__pycache__
 users/
 usersArgs
-*.test
-update-git
+dist/
