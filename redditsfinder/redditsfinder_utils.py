@@ -15,48 +15,6 @@ from rich.console import Console
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-def cleanupPostData(postData, postType): #Thanks /u/kwelzel for helping me refactor!
-    interestingPostData = {}
-    submissionAndCommentKeys = ('id', 'created_utc', 'subreddit', 'score', 'link_id', 'parent_id')
-
-    for i in submissionAndCommentKeys:
-        if not i in postData.keys():
-            interestingPostData[i] = None
-
-        else:
-            interestingPostData[i] = postData[i]
-
-    timestamp = int(postData['created_utc'])
-    interestingPostData['datetime'] = str(datetime.utcfromtimestamp(timestamp).strftime('%a %b %d %Y, %I:%M %p UTC'))
-
-    if postType == 'comment':
-        if 'permalink' in postData.keys():
-            interestingPostData['permalink'] = f'https://www.reddit.com{postData["permalink"]}'
-        else:
-            interestingPostData['permalink'] = None
-        if 'body' in postData.keys():
-            interestingPostData['body'] = textPostWords(postData['body'])
-        else:
-            interestingPostData['body'] = None
-
-    if postType == 'submission':
-        if 'url' in postData.keys():
-            interestingPostData['url'] = postData["url"]
-        else:
-            interestingPostData['url'] = None
-        if 'full_link' in postData.keys():
-            interestingPostData['full_link'] = postData["full_link"]
-        else:
-            interestingPostData['full_link'] = None
-        if 'selftext' in postData.keys():
-            interestingPostData['selftext'] = textPostWords(postData['selftext'])
-        else:
-            interestingPostData['selftext'] = None
-
-    return interestingPostData
-#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#=============================================================================================================================
-#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 def pushshift(lim, postType, postSetMaxLen, user='', log=False): #Pushshift requests
     console = Console()
     before = int(round(time.time()))
@@ -122,9 +80,9 @@ def countPosts(allPosts):  # Count and order most posted subs.
 
     commentSubList = [] # To turn into a set
     for i, comment in enumerate(allPosts.get('comments')):
-        urlFromIds = f'reddit.com/comments/{comment.get("link_id")[3:]}//{comment.get("id")}'
-        sub = comment.get("subreddit")#.lower()
-        karma = comment.get("score")
+        urlFromIds  = f'reddit.com/comments/{comment.get("link_id")[3:]}//{comment.get("id")}'
+        sub         = comment.get("subreddit")#.lower()
+        karma       = comment.get("score")
         subKarmaStr = f'{sub}-c-{karma}|{urlFromIds}'
 
         commentSubList.append(sub)
@@ -132,9 +90,9 @@ def countPosts(allPosts):  # Count and order most posted subs.
 
     submissionSubList = [] # To turn into a set
     for submission in allPosts.get('submissions'):
-        urlFromIds = f'reddit.com/{submission.get("id")}'
-        sub = submission.get("subreddit")#.lower()
-        karma = submission.get("score")
+        urlFromIds  = f'reddit.com/{submission.get("id")}'
+        sub         = submission.get("subreddit")#.lower()
+        karma       = submission.get("score")
         subKarmaStr = f'{sub}-s-{karma}|{urlFromIds}'
 
         submissionSubList.append(sub)
@@ -159,8 +117,6 @@ def countPosts(allPosts):  # Count and order most posted subs.
                     commentsKarmaTotal += int(typePipeKarmaStr[2:])
                 elif countablePostTypeChar == 's':
                     submissionsKarmaTotal+= int(typePipeKarmaStr[2:])
-
-
 
                 countPostsList.append(countablePostTypeChar)
 
@@ -187,9 +143,11 @@ def writeFiles(allPosts, subredditInfo, user, userDir):
         tPath = os.path.join(userDir, 'count.json')
         with open(tPath, 'w+') as subredditsFile:
             json.dump(subredditInfo, subredditsFile, indent=4)
+
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 def imageUrls(user, submissions):
     urls = [v for i in submissions  for k,v in i.items() if k == 'url']
     imageUrls = []
@@ -210,6 +168,17 @@ def imageUrls(user, submissions):
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+def sitename(url):
+
+    httpGetRid = url.replace('http://', '', 1).replace('https://', '', 1)
+    siteStr = httpGetRid.split('/')[0]
+    return siteStr
+
+#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#=============================================================================================================================
+#─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 def imagesdl(images, userDir): # Needs to deal with all the nonsense involved with image formatting
     console = Console()
 
@@ -219,13 +188,16 @@ def imagesdl(images, userDir): # Needs to deal with all the nonsense involved wi
         os.mkdir(userDir)
 
     for i, url in enumerate(images):
+        if not url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF', '.webp', '.WEBP')):
+            continue
+        
         try:
 
-            if url.endswith(('.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF')) and not 'imgur.com' in url:
+            if not 'imgur.com' in url:
                 urlType = 'image'
-                fname = url.rstrip("/").split("/")[-1].replace('?', '-')
+                fname = sitename(url) + '_' + url.rstrip("/").split("/")[-1].replace('?', '-')
                 imagePath = os.path.join(userDir, f'{fname}')
-                response = requests.get(url, stream=True)
+                response = requests.get(url)
                 status_code = response.status_code
                 if status_code != 200:
                     console.print(f'\t[bold red]{status_code}\t{i+1} bad response {url}')
@@ -242,10 +214,10 @@ def imagesdl(images, userDir): # Needs to deal with all the nonsense involved wi
                 if url.startswith('https://imgur.com') or url.startswith('https://i.imgur.com'):
                     if url.endswith('.gifv.jpg'):
                         url = url.replace('.gifv.jpg', '.mp4')
-                        response = requests.get(url, stream=True)
-                        imagePath = os.path.join(userDir, url.split('/')[-1])
+                        response = requests.get(url)
+                        imagePath = os.path.join(userDir, sitename(url) + '_' + url.split('/')[-1])
                     elif not url.endswith('/zip'): # jpgs, pngs
-                        response = requests.get(url, stream=True)
+                        response = requests.get(url)
                         imagePath = os.path.join(userDir, url.split('/')[-1])
 
                     else: # zips

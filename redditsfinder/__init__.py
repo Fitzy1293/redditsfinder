@@ -20,7 +20,6 @@ import requests
 import json
 import time
 import os,sys
-#from urllib.error import HTTPError
 from pathlib import Path
 
 from rich.table import Table,Column
@@ -33,17 +32,19 @@ CONSOLE = Console()
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 def getPosts(user, postType, printIt=True): # Pushshift API requests in chunks of 100
-    console = Console()
     if printIt:
-        console.print(f'[bold blue underline]{postType[0].upper()}{postType[1:]} request log:')
+        CONSOLE.print(f'[bold blue underline]{postType[0].upper()}{postType[1:]} request log:')
 
     postSetMaxLen = 100 # Max num of posts in each pushshift request, seems to be 100 right now or it breaks.
 
     return pushshift(None, postType, postSetMaxLen, user=user, log=printIt)
+
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 def printTotals(dataForTable, maxRecentPosts=50, printIt=True): #Prints table after the pushshift log.
 
     header = (
@@ -86,7 +87,6 @@ def printTotals(dataForTable, maxRecentPosts=50, printIt=True): #Prints table af
 
 def run(cliArgs, user='', printIt=True, **kwargs):
     start = time.time()
-    console = Console()
 
     if kwargs:
         cliArgs = ['--' + i for i in kwargs.keys()]
@@ -95,7 +95,7 @@ def run(cliArgs, user='', printIt=True, **kwargs):
         user = kwargs['user']
 
     if printIt:
-        console.print(f'[bold blue]Gathering and formatting data from pushshift for {user}.\n')
+        CONSOLE.print(f'[bold blue]Gathering and formatting data from pushshift for {user}.\n')
 
     if  '-pd' in cliArgs or '-p' in cliArgs or '--pics' in cliArgs:
         keyType = {'submission': ('url', 'created_utc',)}
@@ -104,7 +104,7 @@ def run(cliArgs, user='', printIt=True, **kwargs):
         if printIt:
             imageStatus        = ''.join([f'\t[bold green]{i+1} [cyan]{image}\n' for i, image in enumerate(images)])
             imageSubmissionLog = f'[bold blue underline]\nImages submitted by {user}:[/bold blue underline]\n{imageStatus}'
-            console.print(imageSubmissionLog)
+            CONSOLE.print(imageSubmissionLog)
 
         if '-pd' in cliArgs or '-d' in cliArgs or '--download' in cliArgs:
             imagesdl(images, os.path.join(os.getcwd(), 'users', user))
@@ -126,10 +126,10 @@ def run(cliArgs, user='', printIt=True, **kwargs):
 
             if printIt:
                 fnamesStr = '\n\t' + '\n\t'.join([i for i in os.listdir(userDir)])
-                console.print(f'\n[bold cyan underline]{userDir}{fnamesStr}')
+                CONSOLE.print(f'\n[bold cyan underline]{userDir}{fnamesStr}')
 
     if printIt:
-        console.print(f'[bold blue]Run time - {round(time.time() - start, 1)} (s)[/bold blue]\n[bold cyan]{"-"*50}[/bold cyan]')
+        CONSOLE.print(f'[bold blue]Run time - {round(time.time() - start, 1)} (s)[/bold blue]\n[bold cyan]{"-"*50}[/bold cyan]')
 
 #─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #=============================================================================================================================
@@ -172,7 +172,7 @@ def main():  # System arguments
 
     else:
         redditsfinderArgs = sys.argv[1:]
-        optionalArgs = {'--write', '-w', '-p', '--pics', '-d', '-pd', '--download', '-q', '--quiet', '-f', '--file'}
+        optionalArgs = {'--write', '-w', '-p', '--pics', '-d', '--download', '-pd', '-q', '--quiet', '-f', '--file'}
         enteredOptionalArgs = set([i for i in redditsfinderArgs if i in optionalArgs])
 
         if '-f' in enteredOptionalArgs:
